@@ -17,14 +17,20 @@ public class BadmintonMatch {
   
   @XmlElement
   private int onStrikePlayerId;
-	
+
+  @XmlElement
+  private int homeTeamSetsWon;
+
+  @XmlElement
+  private int awayTeamSetsWon;
+ 
   @XmlElementWrapper(name = "stats")
   @XmlElement(name = "stat")
   private List<Stats> stats;
 
   @XmlElementWrapper(name = "sets")
   @XmlElement(name = "set")
-  private List<Sets> sets;
+  private List<Set> sets;
   
   @XmlTransient
   private String match_file_timestamp;
@@ -37,15 +43,31 @@ public BadmintonMatch(Match match) {
 	this.match = match;
 }
 
+public int getHomeTeamSetsWon() {
+	return homeTeamSetsWon;
+}
+
+public void setHomeTeamSetsWon(int homeTeamSetsWon) {
+	this.homeTeamSetsWon = homeTeamSetsWon;
+}
+
+public int getAwayTeamSetsWon() {
+	return awayTeamSetsWon;
+}
+
+public void setAwayTeamSetsWon(int awayTeamSetsWon) {
+	this.awayTeamSetsWon = awayTeamSetsWon;
+}
+
 public BadmintonMatch() {
 	super();
 }
 
-public List<Sets> setSets() {
+public List<Set> getSets() {
 	return sets;
 }
 
-public void setSets(List<Sets> sets) {
+public void setSets(List<Set> sets) {
 	this.sets = sets;
 }
 

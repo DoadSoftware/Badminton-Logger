@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import java.util.List;
+
 import javax.persistence.Column;
 
 @Entity
@@ -12,129 +15,144 @@ public class Match {
 
   @Id
   @Column(name = "matchId")
-  private int matchId;
+  private Integer matchId;
 	
-  @Column(name = "homeFirstPlayer")
-  private Integer homeFirstPlayer ;
+  @Column(name = "homeFirstPlayerId")
+  private Integer homeFirstPlayerId ;
   
-  @Column(name = "homeSecondPlayer")
-  private Integer homeSecondPlayer ;
+  @Column(name = "homeSecondPlayerId")
+  private Integer homeSecondPlayerId ;
 
-  @Column(name = "awayFirstPlayer")
-  private Integer awayFirstPlayer;
+  @Column(name = "homeThirdPlayerId")
+  private Integer homeThirdPlayerId ;
   
-  @Column(name = "awaySecondPlayer")
-  private Integer awaySecondPlayer;
+  @Column(name = "awayFirstPlayerId")
+  private Integer awayFirstPlayerId;
+  
+  @Column(name = "awaySecondPlayerId")
+  private Integer awaySecondPlayerId;
 
+  @Column(name = "awayThirdPlayerId")
+  private Integer awayThirdPlayerId;
+  
   @Column(name = "numberOfSets")
-  private int numberOfSets;
+  private Integer numberOfSets;
+
+  @Transient
+  private Team homeTeam;
+
+  @Transient
+  private Team awayTeam;
   
   @Transient
-  private Player homePlayer;
+  private List<Player> homePlayers;
 
   @Transient
-  private Player awayPlayer;
+  private List<Player> awayPlayers;
   
-  @Transient
-  private Player homePlayer1;
-
-  @Transient
-  private Player awayPlayer1;
-
-public Match(int matchId) {
+public Match(Integer matchId) {
 	super();
 	this.matchId = matchId;
+}
+
+public Team getHomeTeam() {
+	return homeTeam;
+}
+
+public void setHomeTeam(Team homeTeam) {
+	this.homeTeam = homeTeam;
+}
+
+public Team getAwayTeam() {
+	return awayTeam;
+}
+
+public void setAwayTeam(Team awayTeam) {
+	this.awayTeam = awayTeam;
 }
 
 public Match() {
 	super();
 }
 
-public int getMatchId() {
+public Integer getMatchId() {
 	return matchId;
 }
 
-public void setMatchId(int matchId) {
+public void setMatchId(Integer matchId) {
 	this.matchId = matchId;
 }
 
-public Integer getHomeFirstPlayer() {
-	return homeFirstPlayer;
+public Integer getHomeFirstPlayerId() {
+	return homeFirstPlayerId;
 }
 
-public void setHomeFirstPlayer(Integer homeFirstPlayer) {
-	this.homeFirstPlayer = homeFirstPlayer;
+public void setHomeFirstPlayerId(Integer homeFirstPlayerId) {
+	this.homeFirstPlayerId = homeFirstPlayerId;
 }
 
-public Integer getHomeSecondPlayer() {
-	return homeSecondPlayer;
+public Integer getHomeSecondPlayerId() {
+	return homeSecondPlayerId;
 }
 
-public void setHomeSecondPlayer(Integer homeSecondPlayer) {
-	this.homeSecondPlayer = homeSecondPlayer;
+public void setHomeSecondPlayerId(Integer homeSecondPlayerId) {
+	this.homeSecondPlayerId = homeSecondPlayerId;
 }
 
-public Integer getAwayFirstPlayer() {
-	return awayFirstPlayer;
+public Integer getHomeThirdPlayerId() {
+	return homeThirdPlayerId;
 }
 
-public void setAwayFirstPlayer(Integer awayFirstPlayer) {
-	this.awayFirstPlayer = awayFirstPlayer;
+public void setHomeThirdPlayerId(Integer homeThirdPlayerId) {
+	this.homeThirdPlayerId = homeThirdPlayerId;
 }
 
-public Integer getAwaySecondPlayer() {
-	return awaySecondPlayer;
+public Integer getAwayFirstPlayerId() {
+	return awayFirstPlayerId;
 }
 
-public void setAwaySecondPlayer(Integer awaySecondPlayer) {
-	this.awaySecondPlayer = awaySecondPlayer;
+public void setAwayFirstPlayerId(Integer awayFirstPlayerId) {
+	this.awayFirstPlayerId = awayFirstPlayerId;
 }
 
-public int getNumberOfSets() {
+public Integer getAwaySecondPlayerId() {
+	return awaySecondPlayerId;
+}
+
+public void setAwaySecondPlayerId(Integer awaySecondPlayerId) {
+	this.awaySecondPlayerId = awaySecondPlayerId;
+}
+
+public Integer getAwayThirdPlayerId() {
+	return awayThirdPlayerId;
+}
+
+public void setAwayThirdPlayerId(Integer awayThirdPlayerId) {
+	this.awayThirdPlayerId = awayThirdPlayerId;
+}
+
+public Integer getNumberOfSets() {
 	return numberOfSets;
 }
 
-public void setNumberOfSets(int numberOfSets) {
+public void setNumberOfSets(Integer numberOfSets) {
 	this.numberOfSets = numberOfSets;
 }
 
-public Player getHomePlayer() {
-	return homePlayer;
+public List<Player> getHomePlayers() {
+	return homePlayers;
 }
 
-public void setHomePlayer(Player homePlayer) {
-	this.homePlayer = homePlayer;
+public void setHomePlayers(List<Player> homePlayers) {
+	this.homePlayers = homePlayers;
 }
 
-public Player getAwayPlayer() {
-	return awayPlayer;
+public List<Player> getAwayPlayers() {
+	return awayPlayers;
 }
 
-public void setAwayPlayer(Player awayPlayer) {
-	this.awayPlayer = awayPlayer;
+public void setAwayPlayers(List<Player> awayPlayers) {
+	this.awayPlayers = awayPlayers;
 }
 
-public Player getHomePlayer1() {
-	return homePlayer1;
-}
-
-public void setHomePlayer1(Player homePlayer1) {
-	this.homePlayer1 = homePlayer1;
-}
-
-public Player getAwayPlayer1() {
-	return awayPlayer1;
-}
-
-public void setAwayPlayer1(Player awayPlayer1) {
-	this.awayPlayer1 = awayPlayer1;
-}
-
-@Override
-public String toString() {
-	return "Match [matchId=" + matchId + ", homeFirstPlayer=" + homeFirstPlayer + ", homeSecondPlayer=" + homeSecondPlayer +
-			", awayFirstPlayer=" + awayFirstPlayer + ", awaySecondPlayer=" + awaySecondPlayer + ", numberOfSets=" + numberOfSets +
-			 ", homePlayer=" + homePlayer  + ", awayPlayer=" + awayPlayer + ", homePlayer1=" + homePlayer1  + ", awayPlayer1=" + awayPlayer1 +"]";
-}
-  
 }

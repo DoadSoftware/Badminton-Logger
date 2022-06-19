@@ -112,6 +112,7 @@ function processUserSelection(whichInput)
 		if(confirm('Starting frame with ' + $('#select_onstrike_player option:selected').text() + ' on strike') == false) {
 			return false;
 		}
+		uploadFormDataToSessionObjects('START_SET');
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',false);
 		$('#logging_stats_div').find("input").prop('disabled',false);
 		initialiseForm('RESET_SET_STATS',null);
@@ -227,19 +228,23 @@ function uploadFormDataToSessionObjects(whatToProcess)
 	var formData = new FormData();
 	var url_path;
 
-	$('input, select, textarea').each(
-		function(index){ 
-			
-			formData.append($(this).attr('id'),document.getElementById($(this).attr('id')).value);  
-		}
-	);
-	
 	switch(whatToProcess.toUpperCase()) {
 	case 'SAVE_STATS':
 		url_path = 'save_stats_data';
+		$('input, select, textarea').each(
+			function(index){ 
+				formData.append($(this).attr('id'),document.getElementById($(this).attr('id')).value);  
+			}
+		);
 		break;
-	case 'END_SET':
-		url_path = 'end_set';
+	case 'START_SET': case 'END_SET':
+		url_path = whatToProcess.toLowerCase();
+		switch(whatToProcess.toUpperCase()) {
+		case 'END_SET':
+			formData.append('home_sets_count',document.getElementById('home_sets_count').value);  
+			formData.append('away_sets_count',document.getElementById('away_sets_count').value);  
+			break;
+		}
 		break;
 	}
 	
@@ -270,22 +275,13 @@ function processBadmintonProcedures(whatToProcess)
 	var valueToProcess;
 	
 	switch(whatToProcess) {
-		case 'READ-MATCH-AND-POPULATE':
-			valueToProcess = $('#match_file_timestamp').val();
-			break;
-			
-		/*case 'POPULATE-SCOREBUG':
-		switch ($('#selected_broadcaster').val().toUpperCase()) {
-		case 'DOAD_IN_HOUSE_EVEREST':
-			valueToProcess = $('#infobarScene').val() ;
-			
-			break;
-		}
-		break;*/
-			
-		case 'ON-STRIKE_PLAYER':
-			valueToProcess = $('#select_onstrike_player option:selected').val() ;
-			break;
+	case 'READ-MATCH-AND-POPULATE':
+		valueToProcess = $('#match_file_timestamp').val();
+		break;
+		
+	case 'ON-STRIKE_PLAYER':
+		valueToProcess = $('#select_onstrike_player option:selected').val() ;
+		break;
 	}
 	
 	$.ajax({    

@@ -27,9 +27,11 @@ import com.badminton.broadcaster.Doad;
 import com.badminton.containers.Configurations;
 import com.badminton.model.BadmintonMatch;
 import com.badminton.model.Match;
+import com.badminton.model.Player;
 import com.badminton.model.Scene;
-import com.badminton.model.Sets;
+import com.badminton.model.Set;
 import com.badminton.model.Stats;
+import com.badminton.model.Team;
 import com.badminton.service.BadmintonService;
 import com.badminton.util.BadmintonUtil;
 
@@ -124,55 +126,72 @@ public class IndexController
 		return "logger";
 	}
 	
-
-	@RequestMapping(value = {"/save_stats_data","/end_set"}, method={RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = {"/save_stats_data","/start_set","/end_set"}, method={RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody String uploadFormDataToSessionObjects(MultipartHttpServletRequest request)
 					throws IllegalAccessException, InvocationTargetException, IOException, JAXBException
 	{	
-		if (request.getRequestURI().contains("save_stats_data")) {
-			
-			List<Sets> this_sets = new ArrayList<Sets>();
-			for(int i=1;i<=3;i++) {
-				for(Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
-					for(Sets set : this_sets) {
-						if(!entry.getKey().contains("_btn") && !entry.getKey().contains("select_")) {
-						
-						}
+		if (request.getRequestURI().contains("end_set")) {
+
+			for (Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+				if(!entry.getKey().contains("_btn") && !entry.getKey().contains("select_")) { // Ignore buttons. Just take statistics text box values
+					if(entry.getKey().toUpperCase().contains(BadmintonUtil.HOME)){
+						session_match.setHomeTeamSetsWon(Integer.valueOf(entry.getValue()[0]));
+					} else if(entry.getKey().toUpperCase().contains(BadmintonUtil.AWAY)) {
+						session_match.setAwayTeamSetsWon(Integer.valueOf(entry.getValue()[0]));
 					}
 				}
+	   		}
+			if(session_match.getSets() != null && session_match.getSets().size() > 0) {
+				session_match.getSets().get(session_match.getSets().size() - 1).setStatus(BadmintonUtil.END);
 			}
+			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + 
+					session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+		
+		} else if (request.getRequestURI().contains("start_set")) {
+			
+			if(session_match.getSets() == null || session_match.getSets().size() <= 0) {
+				session_match.setSets(new ArrayList<Set>());
+			}
+			session_match.getSets().add(new Set(session_match.getSets().size() + 1, BadmintonUtil.START, 
+					session_match.getMatch().getHomePlayers(), session_match.getMatch().getAwayPlayers(), session_match.getStats()));
+			
+		} else if (request.getRequestURI().contains("save_stats_data")) {
 			
 			List<Stats> this_stats = new ArrayList<Stats>();
 			
-			this_stats.add(new Stats(1, BadmintonUtil.SETS));
-			this_stats.add(new Stats(2, BadmintonUtil.SCORES));
-			this_stats.add(new Stats(3, BadmintonUtil.FOREHAND_WINNER));
-			this_stats.add(new Stats(4, BadmintonUtil.FOREHAND_ERRORS));
-			this_stats.add(new Stats(5, BadmintonUtil.BACKHAND_WINNER ));
-			this_stats.add(new Stats(6, BadmintonUtil.BACKHAND_ERRORS));
+			this_stats.add(new Stats(1, BadmintonUtil.FOREHAND_WINNER));
+			this_stats.add(new Stats(2, BadmintonUtil.FOREHAND_ERRORS));
+			this_stats.add(new Stats(3, BadmintonUtil.BACKHAND_WINNER ));
+			this_stats.add(new Stats(4, BadmintonUtil.BACKHAND_ERRORS));
 			
 			for (Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
 				for(Stats stat : this_stats) {
 					if(!entry.getKey().contains("_btn") && !entry.getKey().contains("select_")) { // Ignore buttons. Just take statistics text box values
-						
-						if(entry.getKey().toUpperCase().contains(stat.getStatType())) {
-							//increment the value in the Home and away stat_count
-							if(entry.getKey().toUpperCase().contains(BadmintonUtil.HOME)){
+						if(entry.getKey().toUpperCase().contains(BadmintonUtil.HOME)){
+							if(entry.getKey().toUpperCase().contains(stat.getStatType())) {
 								stat.setHomeStatCount(Integer.valueOf(entry.getValue()[0]));
-							} 
-							else if(entry.getKey().toUpperCase().contains(BadmintonUtil.AWAY)) {
+							} else if (entry.getKey().toUpperCase().contains(BadmintonUtil.SCORES)) {
+								if(session_match.getSets() != null && session_match.getSets().size() > 0) 
+									session_match.getSets().get(session_match.getSets().size() - 1).setHomeTeamTotalScore(Integer.valueOf(entry.getValue()[0]));
+							}
+						} else if(entry.getKey().toUpperCase().contains(BadmintonUtil.AWAY)) {
+							if(entry.getKey().toUpperCase().contains(stat.getStatType())) {
 								stat.setAwayStatCount(Integer.valueOf(entry.getValue()[0]));
+							} else if (entry.getKey().toUpperCase().contains(BadmintonUtil.SCORES)) {
+								if(session_match.getSets() != null && session_match.getSets().size() > 0) 
+									session_match.getSets().get(session_match.getSets().size() - 1).setAwayTeamTotalScore(Integer.valueOf(entry.getValue()[0]));
 							}
 						}
 					}
 				}
 	   		}
 			session_match.setStats(this_stats);
+			if(session_match.getSets() != null && session_match.getSets().size() > 0) {
+				session_match.getSets().get(session_match.getSets().size() - 1).setStats(this_stats);
+			}
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));
-		}
-		else {
-			session_match.setSets()
 		}
 		return JSONObject.fromObject(session_match).toString();
 	}
@@ -252,29 +271,52 @@ public class IndexController
 	public Match populateMatchVariables(Match match)
 	{
 		if(match != null && match.getMatchId() > 0) {
+			
+			List<Player> players = new ArrayList<Player>();
+			Team team = null;
 			match = badmintonService.getMatch(match.getMatchId());
 			
-				if(match.getHomeFirstPlayer() != null) {
-					match.setHomePlayer(badmintonService.getPlayer(match.getHomeFirstPlayer()));
-					match.getHomePlayer().setTeam(badmintonService.getTeam(match.getHomePlayer().getTeamId()));
-				}
-				
-				if(match.getHomeSecondPlayer() != null) {
-					match.setHomePlayer1(badmintonService.getPlayer(match.getHomeSecondPlayer()));
-					match.getHomePlayer1().setTeam(badmintonService.getTeam(match.getHomePlayer1().getTeamId()));
-				}
-				
-				if(match.getAwayFirstPlayer() != null) {
-					match.setAwayPlayer(badmintonService.getPlayer(match.getAwayFirstPlayer()));
-					match.getAwayPlayer().setTeam(badmintonService.getTeam(match.getAwayPlayer().getTeamId()));
-				}
-				
-				if(match.getAwaySecondPlayer() != null) {
-					match.setAwayPlayer1(badmintonService.getPlayer(match.getAwaySecondPlayer()));
-					match.getAwayPlayer1().setTeam(badmintonService.getTeam(match.getAwayPlayer1().getTeamId()));
-				}
-				
+			if(match.getHomeFirstPlayerId() > 0) {
+				players.add(badmintonService.getPlayer(match.getHomeFirstPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
 			}
+			if(match.getHomeSecondPlayerId() > 0) {
+				players.add(badmintonService.getPlayer(match.getHomeSecondPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
+			}
+			if(match.getHomeThirdPlayerId() > 0) {
+				players.add(badmintonService.getPlayer(match.getHomeThirdPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
+			}
+			match.setHomePlayers(players);
+			if(team != null)
+				match.setHomeTeam(team);
+			
+			players.clear();
+			team = null;
+			if(match.getAwayFirstPlayerId() > 0) {
+				players.add(badmintonService.getPlayer(match.getAwayFirstPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
+			}
+			if(match.getAwaySecondPlayerId() > 0) {
+				players.add(badmintonService.getPlayer(match.getAwaySecondPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
+			}
+			if(match.getAwayThirdPlayerId() > 0) {
+				players.add(badmintonService.getPlayer(match.getAwayThirdPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
+			}
+			match.setAwayPlayers(players);
+			if(team != null)
+				match.setAwayTeam(team);
+			
+		}
 		return match;
 	}
 	

@@ -18,6 +18,9 @@ public class BadmintonUtil {
 	public final static String PLAYER = "PLAYER";
 	public final static String STATS = "STATS";
 
+	public final static String START = "START";
+	public final static String END = "END";
+	
 	public final static String HOME = "HOME";
 	public final static String AWAY = "AWAY";
 	
