@@ -265,6 +265,9 @@ public class IndexController
 	{
 		if(match.getMatch() != null && match.getMatch().getMatchId() > 0) {
 			match.setMatch(populateMatchVariables(match.getMatch()));
+			System.out.println(match.getMatch().getHomePlayers().get(match.getMatch().getHomePlayers().size()-1).getFull_name());
+			System.out.println(match.getMatch().getAwayPlayers().get(match.getMatch().getAwayPlayers().size()-1).getFull_name());
+			
 		}
 		return match;
 	}
@@ -272,47 +275,48 @@ public class IndexController
 	{
 		if(match != null && match.getMatchId() > 0) {
 			
-			List<Player> players = new ArrayList<Player>();
+			List<Player> h_players = new ArrayList<Player>();
+			List<Player> a_players = new ArrayList<Player>();
 			Team team = null;
 			match = badmintonService.getMatch(match.getMatchId());
 			
-			if(match.getHomeFirstPlayerId() > 0) {
-				players.add(badmintonService.getPlayer(match.getHomeFirstPlayerId()));
-				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
-				players.get(players.size() - 1).setTeam(team);
+			if(match.getHomeFirstPlayerId() != null) {
+				h_players.add(badmintonService.getPlayer(match.getHomeFirstPlayerId()));
+				team = badmintonService.getTeam(h_players.get(h_players.size() - 1).getTeamId());
+				h_players.get(h_players.size() - 1).setTeam(team);
 			}
-			if(match.getHomeSecondPlayerId() > 0) {
-				players.add(badmintonService.getPlayer(match.getHomeSecondPlayerId()));
-				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
-				players.get(players.size() - 1).setTeam(team);
+			if(match.getHomeSecondPlayerId() != null) {
+				h_players.add(badmintonService.getPlayer(match.getHomeSecondPlayerId()));
+				team = badmintonService.getTeam(h_players.get(h_players.size() - 1).getTeamId());
+				h_players.get(h_players.size() - 1).setTeam(team);
 			}
-			if(match.getHomeThirdPlayerId() > 0) {
-				players.add(badmintonService.getPlayer(match.getHomeThirdPlayerId()));
-				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
-				players.get(players.size() - 1).setTeam(team);
+			if(match.getHomeThirdPlayerId() != null) {
+				h_players.add(badmintonService.getPlayer(match.getHomeThirdPlayerId()));
+				team = badmintonService.getTeam(h_players.get(h_players.size() - 1).getTeamId());
+				h_players.get(h_players.size() - 1).setTeam(team);
 			}
-			match.setHomePlayers(players);
+			match.setHomePlayers(h_players);
 			if(team != null)
 				match.setHomeTeam(team);
 			
-			players.clear();
+			//players.clear();
 			team = null;
-			if(match.getAwayFirstPlayerId() > 0) {
-				players.add(badmintonService.getPlayer(match.getAwayFirstPlayerId()));
-				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
-				players.get(players.size() - 1).setTeam(team);
+			if(match.getAwayFirstPlayerId() != null) {
+				a_players.add(badmintonService.getPlayer(match.getAwayFirstPlayerId()));
+				team = badmintonService.getTeam(a_players.get(a_players.size() - 1).getTeamId());
+				a_players.get(a_players.size() - 1).setTeam(team);
 			}
-			if(match.getAwaySecondPlayerId() > 0) {
-				players.add(badmintonService.getPlayer(match.getAwaySecondPlayerId()));
-				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
-				players.get(players.size() - 1).setTeam(team);
+			if(match.getAwaySecondPlayerId() != null) {
+				a_players.add(badmintonService.getPlayer(match.getAwaySecondPlayerId()));
+				team = badmintonService.getTeam(a_players.get(a_players.size() - 1).getTeamId());
+				a_players.get(a_players.size() - 1).setTeam(team);
 			}
-			if(match.getAwayThirdPlayerId() > 0) {
-				players.add(badmintonService.getPlayer(match.getAwayThirdPlayerId()));
-				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
-				players.get(players.size() - 1).setTeam(team);
+			if(match.getAwayThirdPlayerId() != null) {
+				a_players.add(badmintonService.getPlayer(match.getAwayThirdPlayerId()));
+				team = badmintonService.getTeam(a_players.get(a_players.size() - 1).getTeamId());
+				a_players.get(a_players.size() - 1).setTeam(team);
 			}
-			match.setAwayPlayers(players);
+			match.setAwayPlayers(a_players);
 			if(team != null)
 				match.setAwayTeam(team);
 			

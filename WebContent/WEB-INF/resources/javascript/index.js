@@ -340,8 +340,9 @@ function addItemsToList(whatToProcess, dataToProcess){
 		dataToProcess.forEach(function(match,index,array){
 			option = document.createElement('option');
 			option.value = match.matchId + '.xml';
-			
-			option.innerHTML = match.homePlayer.full_name + ' v ' + match.awayPlayer.full_name + ' (' + match.numberOfSets + ')';
+				
+			option.innerHTML = match.homePlayers[match.homePlayers.length-1].full_name + ' v ' + 
+					match.awayPlayers[match.awayPlayers.length-1].full_name + ' (' + match.numberOfSets + ')';
 			
 			list_option.append(option);
 		});
@@ -438,7 +439,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 		
 		option = document.createElement('h6');
 		option.id = 'match_summary';
-		option.innerHTML = dataToProcess.match.homePlayer.full_name + ' is on strike';
+		option.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].full_name + ' is on strike';
 		option.style = 'text-align:center';
 		document.getElementById('logging_stats_div').appendChild(option);
 		
@@ -446,13 +447,13 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option.id = 'select_onstrike_player';
 		
 		list_option = document.createElement('option');
-		list_option.value = dataToProcess.match.homePlayer.playerId;
-	    list_option.text = dataToProcess.match.homePlayer.full_name;
+		list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].playerId;
+	    list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].full_name;
 		option.appendChild(list_option);
 		
 		list_option = document.createElement('option');
-		list_option.value = dataToProcess.match.awayPlayer.playerId;
-	    list_option.text = dataToProcess.match.awayPlayer.full_name;
+		list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-1].playerId;
+	    list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-1].full_name;
 	    
 	    option.setAttribute('onclick','processUserSelection(this);');
 		option.appendChild(list_option);
@@ -471,13 +472,13 @@ function addItemsToList(whatToProcess, dataToProcess){
 		    th = document.createElement('th'); //column
 		    switch (j) {
 			case 1:
-			    text = document.createTextNode(dataToProcess.match.homePlayer.full_name); 
+			    text = document.createTextNode(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].full_name); 
 				break;
 			case 2:
 			    text = document.createTextNode('Detail'); 
 				break;
 			case 3:
-			    text = document.createTextNode(dataToProcess.match.awayPlayer.full_name); 
+			    text = document.createTextNode(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-1].full_name); 
 				break;
 			}
 			th.style='color:#008cff;text-align:center;';
