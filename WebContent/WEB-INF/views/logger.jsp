@@ -15,10 +15,10 @@
   <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/5.1.3/css/bootstrap.min.css"/>"/>  
   <link href="<c:url value="/webjars/font-awesome/6.0.0/css/all.css"/>" rel="stylesheet">
 <script type="text/javascript">
-	/*setInterval(() => {
+	setInterval(() => {
 		processBadmintonProcedures('READ-DATABASE-AND-POPULATE');
 		processBadmintonProcedures('READ-MATCH-AND-POPULATE');
-	}, 1000);*/
+	}, 1000);
 </script> 
 </head>
 <body onload="reloadPage('LOGGER')">

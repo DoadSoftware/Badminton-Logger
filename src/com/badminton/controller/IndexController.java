@@ -188,14 +188,20 @@ public class IndexController
 			@RequestParam(value = "valueToProcess", required = false, defaultValue = "") String valueToProcess)
 					throws IOException, IllegalAccessException, InvocationTargetException, JAXBException, InterruptedException
 	{	
+		System.out.println(whatToProcess.toUpperCase());
 		switch (whatToProcess.toUpperCase()) {
 		
-		/*case "READ-MATCH-AND-POPULATE":
+		case "READ-MATCH-AND-POPULATE":
+			
+			
 			if(!valueToProcess.equalsIgnoreCase(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name() ).lastModified())))
 			{
+				
 				session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
 				new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name())));
+				
+				
 				
 				session_match.setMatch_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
 						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name()).lastModified()));
@@ -207,20 +213,23 @@ public class IndexController
 			}
 		
 		case "READ-DATABASE-AND-POPULATE":
+			System.out.println("database-value " + valueToProcess);
 			if(!valueToProcess.equalsIgnoreCase(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + BadmintonUtil.DATABASE_FILE).lastModified())))
 			{
 				session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
 						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name())));
 				
+				System.out.println("database-time " + session_match.getDatabase_file_timestamp());
+				
 				session_match.setDatabase_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
-						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name()).lastModified()));
+						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + session_match.getDatabase_file_timestamp()).lastModified()));
 					
 				return JSONObject.fromObject(session_match).toString();
 			}
 			else {
 				return JSONObject.fromObject(null).toString();
-			}*/
+			}
 			
 		case "LOAD_MATCHES":
 			
@@ -234,7 +243,6 @@ public class IndexController
 			return JSONObject.fromObject(populateMatchVariables(session_match)).toString();
 			
 		case "ON-STRIKE_PLAYER":
-			session_match.getMatch().getSuperMatch();
 			session_match.setOnStrikePlayerId(Integer.valueOf(valueToProcess));
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));
@@ -247,7 +255,6 @@ public class IndexController
 			return JSONObject.fromObject(session_match).toString();
 			
 		case "GOLDEN-HOME-POINTS": case "GOLDEN-AWAY-POINTS":
-			
 			session_match.setGoldenPointsWonTeam(Integer.valueOf(valueToProcess));
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));

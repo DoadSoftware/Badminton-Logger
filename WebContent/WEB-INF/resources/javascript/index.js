@@ -118,14 +118,8 @@ function processUserSelection(whichInput)
 		
 	case 'start_set': 
 		
-		if($('#select_onstrike_player option:selected').text() == $('#select_onstrike_player option:first').text()){
-			if(confirm('Please select player') == false) {
-				return false;
-			}	
-		}else{
-			if(confirm('Starting set with ' + $('#select_onstrike_player option:selected').text() + ' on strike') == false) {
-				return false;
-			}
+		if(confirm('Starting set with ' + $('#select_onstrike_player option:selected').text() + ' on strike') == false) {
+			return false;
 		}
 		
 		uploadFormDataToSessionObjects('START_SET');
@@ -137,7 +131,7 @@ function processUserSelection(whichInput)
 	case 'end_set': 
 	
 		if($('#home_scores_count').val() > $('#away_scores_count').val()) {
-			if(confirm('End set with ' + $('#select_onstrike_player option:second').text() + ' winning the set') == false) {
+			if(confirm('End set with ' + $('#select_onstrike_player option:first').text() + ' winning the set') == false) {
 				return false;
 			}
 			$('#home_sets_count').val(parseInt($('#home_sets_count').val()) + 1);
@@ -336,13 +330,14 @@ function processBadmintonProcedures(whatToProcess)
 	var valueToProcess;
 	
 	switch(whatToProcess) {
-	/*case 'READ-MATCH-AND-POPULATE':
+	case 'READ-MATCH-AND-POPULATE':
 		valueToProcess = $('#match_file_timestamp').val();
 		break;
 	
 	case 'READ-DATABASE-AND-POPULATE':
 		valueToProcess = $('#database_file_timestamp').val();
-		break;*/
+		//alert(valueToProcess);
+		break;
 		
 	case 'ON-STRIKE_PLAYER':
 		valueToProcess = $('#select_onstrike_player option:selected').val() ;
@@ -376,28 +371,29 @@ function processBadmintonProcedures(whatToProcess)
         success : function(data) {
         	switch(whatToProcess) {
 				
-			/*case 'READ-MATCH-AND-POPULATE': case 'READ-DATABASE-AND-POPULATE':
+			case 'READ-MATCH-AND-POPULATE': case 'READ-DATABASE-AND-POPULATE':
 				if(data){
+					//alert(whatToProcess);
 					switch(whatToProcess){
 					case 'READ-MATCH-AND-POPULATE':
-						if(data){
-							if($('#match_file_timestamp').val() != data.match_file_timestamp) {
-								document.getElementById('match_file_timestamp').value = data.match_file_timestamp;
-							}
+						//alert($('#match_file_timestamp').val());
+						if($('#match_file_timestamp').val() != data.match_file_timestamp) {
+							document.getElementById('match_file_timestamp').value = data.match_file_timestamp;
+							addItemsToList('LOAD_MATCH',data);
 						}
 						break;
 						
 					case 'READ-DATABASE-AND-POPULATE':
-						if(data){
-							if($('#database_file_timestamp').val() != data.database_file_timestamp) {
-								document.getElementById('database_file_timestamp').value = data.database_file_timestamp;
-							}
+						//alert($('#database_file_timestamp').val());
+						if($('#database_file_timestamp').val() != data.database_file_timestamp) {
+							document.getElementById('database_file_timestamp').value = data.database_file_timestamp;
+							addItemsToList('LOAD_MATCH',data);
 						}
 						break;	
 					}
-					addItemsToList('LOAD_MATCH',data);
+					
 				}
-				break;*/
+				break;
 			
 			case 'LOAD_MATCHES': case 'LOAD_MATCH':
 				addItemsToList(whatToProcess,data)
@@ -528,14 +524,25 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option.style = 'text-align:center';
 		document.getElementById('logging_stats_div').appendChild(option);
 		
+		/*option = document.createElement('h6');
+		//option.id = 'match_summary';
+		dataToProcess.sets.forEach(function(st,index,arr){
+			if(st.setNumber == 1) {
+				option.innerHTML = st.homeTeamTotalScore + "-" + st.awayTeamTotalScore; 			
+			}
+			if(st.setNumber == 2) {
+				option.innerHTML = st.homeTeamTotalScore + "-" + st.awayTeamTotalScore; 			
+			}
+			if(st.setNumber == 3) {
+				option.innerHTML = st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
+			}
+		});
+		option.style = 'text-align:center';
+		document.getElementById('logging_stats_div').appendChild(option);*/
+		
 		option = document.createElement('select');
 		option.id = 'select_onstrike_player';
-		option.style = 'width:150px;margin-left:5%;';
-		
-		list_option = document.createElement('option');
-		list_option.value = '0';
-	    list_option.text = 'select player';
-		option.appendChild(list_option);
+		//option.style = 'width:150px;margin-left:5%;';
 		
 		list_option = document.createElement('option');
 		list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].playerId;
@@ -552,10 +559,10 @@ function addItemsToList(whatToProcess, dataToProcess){
 		text = document.createElement('label');
 		text.innerHTML = 'Choose On Strike Player: '
 		text.htmlFor = option.id;
-		text.style = 'width:250px';
+		//text.style = 'width:250px';
 		document.getElementById('logging_stats_div').appendChild(text).appendChild(option);
 		
-		option = document.createElement('select');
+		/*option = document.createElement('select');
 		option.id = 'select_golden_points_player';
 		option.style = 'width:150px;margin-left:5%;';
 		
@@ -598,7 +605,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option.id = 'save_button';
 		option.style = 'width:110px;margin-top:1%;margin-left:3%;';
 		option.setAttribute('onclick','processUserSelection(this);');
-		document.getElementById('logging_stats_div').appendChild(option);
+		document.getElementById('logging_stats_div').appendChild(option);*/
 		
 		
 		table = document.createElement('table');
