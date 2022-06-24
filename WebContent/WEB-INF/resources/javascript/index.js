@@ -211,7 +211,6 @@ function processUserSelection(whichInput)
     		case 'increment':
 				
 				switch ($(whichInput).attr('id').split('_')[2]) {
-					
 				case 'FW': case 'FE': case 'BW': case 'BE':
 	    			$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
 					parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1)
@@ -219,25 +218,29 @@ function processUserSelection(whichInput)
 				
 	    		case 'Points': 
 	    			if($('#golder_points_check_box').is(":checked")){
+						
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2);
-							
-						ball_value = parseInt(ball_value) + parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val());
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(ball_value);
-							
-						if($(whichInput).attr('id').split('_')[0] == 'home'){
-							alert('home win');
-							processBadmintonProcedures('GOLDEN-HOME-POINTS');
-						}else{
-							alert('away win');
-							processBadmintonProcedures('GOLDEN-AWAY-POINTS');
-						}	
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
+						);
+
+						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2
+						);
+						
+						$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1
+						);
+						
 					}else{
+
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1);
-							
-						ball_value = parseInt(ball_value) + parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val());
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(ball_value);
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
+						);
+
+						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 1
+						);
+
 					}
 	        		
 	        		break;	
@@ -329,14 +332,9 @@ function processBadmintonProcedures(whatToProcess)
 {
 	var valueToProcess;
 	
-	switch(whatToProcess) {
-	case 'READ-MATCH-AND-POPULATE':
-		valueToProcess = $('#match_file_timestamp').val();
-		break;
-	
+	switch(whatToProcess.toUpperCase()) {
 	case 'READ-DATABASE-AND-POPULATE':
 		valueToProcess = $('#database_file_timestamp').val();
-		//alert(valueToProcess);
 		break;
 		
 	case 'ON-STRIKE_PLAYER':
@@ -370,31 +368,14 @@ function processBadmintonProcedures(whatToProcess)
         dataType : 'json',
         success : function(data) {
         	switch(whatToProcess) {
-				
-			case 'READ-MATCH-AND-POPULATE': case 'READ-DATABASE-AND-POPULATE':
+			case 'READ-DATABASE-AND-POPULATE':
 				if(data){
-					//alert(whatToProcess);
-					switch(whatToProcess){
-					case 'READ-MATCH-AND-POPULATE':
-						//alert($('#match_file_timestamp').val());
-						if($('#match_file_timestamp').val() != data.match_file_timestamp) {
-							document.getElementById('match_file_timestamp').value = data.match_file_timestamp;
-							addItemsToList('LOAD_MATCH',data);
-						}
-						break;
-						
-					case 'READ-DATABASE-AND-POPULATE':
-						//alert($('#database_file_timestamp').val());
-						if($('#database_file_timestamp').val() != data.database_file_timestamp) {
-							document.getElementById('database_file_timestamp').value = data.database_file_timestamp;
-							addItemsToList('LOAD_MATCH',data);
-						}
-						break;	
+					if($('#database_file_timestamp').val() != data.database_file_timestamp) {
+						document.getElementById('database_file_timestamp').value = data.database_file_timestamp;
+						addItemsToList('LOAD_MATCH',data);
 					}
-					
 				}
 				break;
-			
 			case 'LOAD_MATCHES': case 'LOAD_MATCH':
 				addItemsToList(whatToProcess,data)
 	        	switch(whatToProcess) {
@@ -562,7 +543,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 		//text.style = 'width:250px';
 		document.getElementById('logging_stats_div').appendChild(text).appendChild(option);
 		
-		/*option = document.createElement('select');
+		option = document.createElement('select');
 		option.id = 'select_golden_points_player';
 		option.style = 'width:150px;margin-left:5%;';
 		
@@ -605,8 +586,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option.id = 'save_button';
 		option.style = 'width:110px;margin-top:1%;margin-left:3%;';
 		option.setAttribute('onclick','processUserSelection(this);');
-		document.getElementById('logging_stats_div').appendChild(option);*/
-		
+		document.getElementById('logging_stats_div').appendChild(option);
 		
 		table = document.createElement('table');
 		table.setAttribute('class', 'table table-bordered');

@@ -34,6 +34,7 @@ public class BadmintonUtil {
 	public final static String POINTS = "Points";
 	public final static String FOREHAND_WINNER = "FW";
 	public final static String FOREHAND_ERRORS = "FE";
+	public final static String GOLDEN = "GOLDEN";
 	
 	public final static String BACKHAND_WINNER = "BW";
 	public final static String BACKHAND_ERRORS = "BE";

@@ -17,7 +17,6 @@
 <script type="text/javascript">
 	setInterval(() => {
 		processBadmintonProcedures('READ-DATABASE-AND-POPULATE');
-		processBadmintonProcedures('READ-MATCH-AND-POPULATE');
 	}, 1000);
 </script> 
 </head>
@@ -40,7 +39,8 @@
     </div>
   </div>
 </div>
-<input type="hidden" id="match_file_timestamp" name="match_file_timestamp" value="${session_match.match_file_timestamp}"></input>
 <input type="hidden" id="database_file_timestamp" name="database_file_timestamp" value="${session_match.database_file_timestamp}"></input>
+<input type="hidden" id="home_golden" name="home_golden"></input>
+<input type="hidden" id="away_golden" name="away_golden"></input>
 </body>
 </html>

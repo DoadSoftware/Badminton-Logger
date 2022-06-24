@@ -16,9 +16,6 @@ public class BadmintonMatch {
   private Match match;
   
   @XmlElement
-  private String match_file_name;
-  
-  @XmlElement
   private int onStrikePlayerId;
   
   @XmlElement
@@ -43,9 +40,6 @@ public class BadmintonMatch {
   @XmlElementWrapper(name = "sets")
   @XmlElement(name = "set")
   private List<Set> sets;
-  
-  @XmlTransient
-  private String match_file_timestamp;
   
   @XmlTransient
   private String database_file_timestamp;
@@ -110,28 +104,12 @@ public void setStats(List<Stats> stats) {
 	this.stats = stats;
 }
 
-public String getMatch_file_timestamp() {
-	return match_file_timestamp;
-}
-
-public void setMatch_file_timestamp(String match_file_timestamp) {
-	this.match_file_timestamp = match_file_timestamp;
-}
-
 public String getDatabase_file_timestamp() {
 	return database_file_timestamp;
 }
 
 public void setDatabase_file_timestamp(String database_file_timestamp) {
 	this.database_file_timestamp = database_file_timestamp;
-}
-
-public String getMatch_file_name() {
-	return match_file_name;
-}
-
-public void setMatch_file_name(String match_file_name) {
-	this.match_file_name = match_file_name;
 }
 
 public int getOnStrikePlayerId() {
