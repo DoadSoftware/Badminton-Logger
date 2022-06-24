@@ -16,13 +16,25 @@ public class BadmintonMatch {
   private Match match;
   
   @XmlElement
+  private String match_file_name;
+  
+  @XmlElement
   private int onStrikePlayerId;
+  
+  @XmlElement
+  private int goldenPointsPlayerId;
 
   @XmlElement
   private int homeTeamSetsWon;
 
   @XmlElement
   private int awayTeamSetsWon;
+  
+  @XmlElement
+  private int goldenPointsWonTeam;
+  
+  @XmlElement
+  private int goldenPointscount;
  
   @XmlElementWrapper(name = "stats")
   @XmlElement(name = "stat")
@@ -34,6 +46,9 @@ public class BadmintonMatch {
   
   @XmlTransient
   private String match_file_timestamp;
+  
+  @XmlTransient
+  private String database_file_timestamp;
   
   @XmlTransient
   private List<Match> matches;
@@ -103,12 +118,52 @@ public void setMatch_file_timestamp(String match_file_timestamp) {
 	this.match_file_timestamp = match_file_timestamp;
 }
 
+public String getDatabase_file_timestamp() {
+	return database_file_timestamp;
+}
+
+public void setDatabase_file_timestamp(String database_file_timestamp) {
+	this.database_file_timestamp = database_file_timestamp;
+}
+
+public String getMatch_file_name() {
+	return match_file_name;
+}
+
+public void setMatch_file_name(String match_file_name) {
+	this.match_file_name = match_file_name;
+}
+
 public int getOnStrikePlayerId() {
 	return onStrikePlayerId;
 }
 
 public void setOnStrikePlayerId(int onStrikePlayerId) {
 	this.onStrikePlayerId = onStrikePlayerId;
+}
+
+public int getGoldenPointsPlayerId() {
+	return goldenPointsPlayerId;
+}
+
+public void setGoldenPointsPlayerId(int goldenPointsPlayerId) {
+	this.goldenPointsPlayerId = goldenPointsPlayerId;
+}
+
+public int getGoldenPointsWonTeam() {
+	return goldenPointsWonTeam;
+}
+
+public void setGoldenPointsWonTeam(int goldenPointsWonTeam) {
+	this.goldenPointsWonTeam = goldenPointsWonTeam;
+}
+
+public int getGoldenPointscount() {
+	return goldenPointscount;
+}
+
+public void setGoldenPointscount(int goldenPointscount) {
+	this.goldenPointscount = goldenPointscount;
 }
 
 }

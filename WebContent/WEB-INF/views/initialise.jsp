@@ -42,33 +42,6 @@
 			          <option value="DOAD_In_House_Everest">DOAD In House Everest</option>
 			      </select>
 			    </div>
-			    <div class="form-group row row-bottom-margin ml-2" style="margin-bottom:5px;">
-			    <label for="vizIPAddress" class="col-sm-4 col-form-label text-left">Viz IP Address 
-			    	<i class="fas fa-asterisk fa-sm text-danger" style="font-size: 7px;"></i></label>
-			    <div class="col-sm-6 col-md-6">
-		             <input type="text" id="vizIPAddress" name="vizIPAddress" 
-		             		class="form-control form-control-sm floatlabel" value="localhost"></input>
-		              <label id="vizIPAddress-validation" style="color:red; display: none;"></label> 
-			    </div>
-			  </div>
-			  <div class="form-group row row-bottom-margin ml-2" style="margin-bottom:5px;">
-			    <label for="vizPortNumber" class="col-sm-4 col-form-label text-left">Viz Port Number 
-			    	<i class="fas fa-asterisk fa-sm text-danger" style="font-size: 7px;"></i></label>
-			    <div class="col-sm-6 col-md-6">
-		             <input type="text" id="vizPortNumber" name="vizPortNumber" 
-		             	class="form-control form-control-sm floatlabel" value="6100"></input>
-		              <label id="vizPortNumber-validation" style="color:red; display: none;"></label> 
-			    </div>
-			  </div>
-			  <div class="form-group row row-bottom-margin ml-2" style="margin-bottom:5px;">
-			    <label for="vizScene" class="col-sm-4 col-form-label text-left">Viz Scene
-			    	<i class="fas fa-asterisk fa-sm text-danger" style="font-size: 7px;"></i></label>
-			    <div class="col-sm-6 col-md-6">
-		             <input type="text" id="vizScene" name="vizScene" 
-		             	class="form-control form-control-sm floatlabel"></input>
-		              <label id="vizScene-validation" style="color:red; display: none;"></label> 
-			    </div>
-			  </div>
 		    <button style="background-color:#2E008B;color:#FEFEFE;" class="btn btn-sm" type="submit"
 		  		name="load_match_btn" id="load_match_btn" >
 		  		<i class="fa fa-futbol-o" aria-hidden="true"></i> Load Match</button>

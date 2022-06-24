@@ -6,9 +6,11 @@ public class BadmintonUtil {
 	public final static String MATCHES_DIRECTORY = "Matches/";
 	public final static String SCENES_DIRECTORY = "Scenes/";
 	public final static String EVENT_DIRECTORY = "Event/";
+	public final static String DATABASE_DIRECTORY = "Database/";
+	public static final String DATABASE_FILE = "Badminton.mdb";
 	public final static String XML = ".xml";
 	public static final String CONFIGURATIONS_DIRECTORY = "Configurations/";
-	 public static final String LOGGER_XML = "LOGGER.XML";
+	public static final String LOGGER_XML = "LOGGER.XML";
 
 	public final static String LOAD_MATCH = "LOAD_MATCH";
 	public static final String SUCCESSFUL = "SUCCESSFUL";

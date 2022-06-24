@@ -14,11 +14,12 @@
   
   <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/5.1.3/css/bootstrap.min.css"/>"/>  
   <link href="<c:url value="/webjars/font-awesome/6.0.0/css/all.css"/>" rel="stylesheet">
-	<!-- <script type="text/javascript">
-		setInterval(() => {
-		processSnookerProcedures('READ-MATCH-AND-POPULATE');
-		}, 1000);
-	</script> -->
+<script type="text/javascript">
+	/*setInterval(() => {
+		processBadmintonProcedures('READ-DATABASE-AND-POPULATE');
+		processBadmintonProcedures('READ-MATCH-AND-POPULATE');
+	}, 1000);*/
+</script> 
 </head>
 <body onload="reloadPage('LOGGER')">
 <div class="content py-5" style="background-color: #EAE8FF; color: #2E008B">
@@ -40,5 +41,6 @@
   </div>
 </div>
 <input type="hidden" id="match_file_timestamp" name="match_file_timestamp" value="${session_match.match_file_timestamp}"></input>
+<input type="hidden" id="database_file_timestamp" name="database_file_timestamp" value="${session_match.database_file_timestamp}"></input>
 </body>
 </html>

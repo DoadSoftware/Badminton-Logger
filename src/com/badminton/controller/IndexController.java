@@ -3,11 +3,12 @@ package com.badminton.controller;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -23,12 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.badminton.broadcaster.Doad;
 import com.badminton.containers.Configurations;
 import com.badminton.model.BadmintonMatch;
 import com.badminton.model.Match;
 import com.badminton.model.Player;
-import com.badminton.model.Scene;
 import com.badminton.model.Set;
 import com.badminton.model.Stats;
 import com.badminton.model.Team;
@@ -45,10 +44,9 @@ public class IndexController
 	BadmintonService badmintonService;
 	public static Configurations session_Configurations;
 	public static Socket session_socket;
-	public static Doad this_doad;
 	public static BadmintonMatch session_match;
-	public static PrintWriter print_writer;
-	String selectedBroadcaster,which_graphics_onscreen,viz_scene_path;
+	String selectedMatch;
+	String selectedBroadcaster;
 	
 	@RequestMapping(value = {"/","/initialise"}, method={RequestMethod.GET,RequestMethod.POST}) 
 	public String initialisePage(ModelMap model) throws JAXBException, IOException  
@@ -86,38 +84,26 @@ public class IndexController
 	public String loggerPage(ModelMap model, MultipartHttpServletRequest request,
 			@RequestParam(value = "select_broadcaster", required = false, defaultValue = "") String select_broadcaster,
 			@RequestParam(value = "selectedMatch", required = false, defaultValue = "") String selectedMatch,
-			@RequestParam(value = "session_socket", required = false, defaultValue = "") String Socket,
-			@RequestParam(value = "vizIPAddress", required = false, defaultValue = "") String vizIPAddresss,
-			@RequestParam(value = "vizPortNumber", required = false, defaultValue = "") int vizPortNumber,
-			@RequestParam(value = "vizScene", required = false, defaultValue = "") String vizScene)
+			@RequestParam(value = "session_socket", required = false, defaultValue = "") String Socket)
 			throws UnknownHostException,JAXBException, IOException,IllegalAccessException,InvocationTargetException, InterruptedException
 	{
 		selectedBroadcaster = select_broadcaster;
-		session_Configurations = new Configurations(selectedMatch, select_broadcaster, vizIPAddresss, vizPortNumber, vizScene);
-		
-		//viz_scene_path = vizScene;
-		
-		session_socket = new Socket(vizIPAddresss, Integer.valueOf(vizPortNumber));
-		print_writer = new PrintWriter(session_socket.getOutputStream(),true);
-		
-		//new Scene(vizScene).scene_load(print_writer);
-		viz_scene_path = "D:\\DOAD_In_House_Everest\\Everest_Sports\\Everest_GBPL\\Scenes\\Scorebug.sum";
-		new Scene(viz_scene_path).scene_load(new PrintWriter(session_socket.getOutputStream(),true),selectedBroadcaster,viz_scene_path);
-		
-		which_graphics_onscreen = "";
-		this_doad = new Doad();
+		session_Configurations = new Configurations(selectedMatch, select_broadcaster);
 				
 		if(new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + selectedMatch).exists()) {
 			session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
 				new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + selectedMatch)));
 		} else {
+			
 			session_match = new BadmintonMatch(new Match(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", ""))));
+			
+			session_match.setMatch_file_name(selectedMatch);
 			
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + selectedMatch));
 		}
-			
-		//session_match.setMatch_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
+		session_match.setMatch_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
+		session_match.setDatabase_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
 		
 		model.addAttribute("session_match", session_match);
 		model.addAttribute("session_socket", session_socket);
@@ -197,7 +183,7 @@ public class IndexController
 	}
 
 	@RequestMapping(value = {"/processBadmintonProcedures"}, method={RequestMethod.GET,RequestMethod.POST})    
-	public @ResponseBody String processSnookerProcedures(
+	public @ResponseBody String processBadmintonProcedures(
 			@RequestParam(value = "whatToProcess", required = false, defaultValue = "") String whatToProcess,
 			@RequestParam(value = "valueToProcess", required = false, defaultValue = "") String valueToProcess)
 					throws IOException, IllegalAccessException, InvocationTargetException, JAXBException, InterruptedException
@@ -206,39 +192,36 @@ public class IndexController
 		
 		/*case "READ-MATCH-AND-POPULATE":
 			if(!valueToProcess.equalsIgnoreCase(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
-					new File(SnookerUtil.SNOOKER_DIRECTORY + SnookerUtil.MATCHES_DIRECTORY + session_match.getMatch_file_timestamp()).lastModified())))
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name() ).lastModified())))
 			{
-				session_match = populateMatchVariables((SnookerMatch) JAXBContext.newInstance(SnookerMatch.class).createUnmarshaller().unmarshal(
-				new File(SnookerUtil.SNOOKER_DIRECTORY + SnookerUtil.MATCHES_DIRECTORY + session_match.getMatch_file_timestamp())));
+				session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
+				new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name())));
 				
 				session_match.setMatch_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
-						new File(SnookerUtil.SNOOKER_DIRECTORY + SnookerUtil.MATCHES_DIRECTORY + session_match.getMatch_file_timestamp()).lastModified()));
+						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name()).lastModified()));
+					
+				return JSONObject.fromObject(session_match).toString();
+			}
+			else {
+				return JSONObject.fromObject(null).toString();
+			}
+		
+		case "READ-DATABASE-AND-POPULATE":
+			if(!valueToProcess.equalsIgnoreCase(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + BadmintonUtil.DATABASE_FILE).lastModified())))
+			{
+				session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
+						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name())));
 				
-					this_doad.populateScoreBug(print_writer, session_match, viz_scene_path);
+				session_match.setDatabase_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
+						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch_file_name()).lastModified()));
 					
 				return JSONObject.fromObject(session_match).toString();
 			}
 			else {
 				return JSONObject.fromObject(null).toString();
 			}*/
-		
-		case "POPULATE-SCOREBUG":
-			switch (selectedBroadcaster.toUpperCase()) {
-			case "DOAD_IN_HOUSE_EVEREST":
-				
-				this_doad.populateScoreBug(print_writer,session_match, viz_scene_path);
-			}
-			return JSONObject.fromObject(this_doad).toString();
-		
-		case "ANIMATE-IN-SCOREBUG":
-			switch (selectedBroadcaster.toUpperCase()) {
-			case "DOAD_IN_HOUSE_EVEREST":
-				this_doad.processAnimation(print_writer, "In", "START", selectedBroadcaster);
-				which_graphics_onscreen = "SCORE_BUG_Badminton";
-			}
-			return JSONObject.fromObject(this_doad).toString();
-		
-		
+			
 		case "LOAD_MATCHES":
 			
 			List<Match> matches = new ArrayList<Match>();
@@ -251,7 +234,28 @@ public class IndexController
 			return JSONObject.fromObject(populateMatchVariables(session_match)).toString();
 			
 		case "ON-STRIKE_PLAYER":
+			session_match.getMatch().getSuperMatch();
 			session_match.setOnStrikePlayerId(Integer.valueOf(valueToProcess));
+			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+			return JSONObject.fromObject(session_match).toString();
+			
+		case "GOLDEN-POINTS_PLAYER":
+			session_match.setGoldenPointsPlayerId(Integer.valueOf(valueToProcess));
+			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+			return JSONObject.fromObject(session_match).toString();
+			
+		case "GOLDEN-HOME-POINTS": case "GOLDEN-AWAY-POINTS":
+			
+			session_match.setGoldenPointsWonTeam(Integer.valueOf(valueToProcess));
+			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+			return JSONObject.fromObject(session_match).toString();
+			
+		case "SAVE_BUTTON_DATA":
+			session_match.setGoldenPointscount(Integer.valueOf(valueToProcess));
+			System.out.println(session_match.getGoldenPointscount());
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));
 			return JSONObject.fromObject(session_match).toString();
@@ -265,9 +269,6 @@ public class IndexController
 	{
 		if(match.getMatch() != null && match.getMatch().getMatchId() > 0) {
 			match.setMatch(populateMatchVariables(match.getMatch()));
-			System.out.println(match.getMatch().getHomePlayers().get(match.getMatch().getHomePlayers().size()-1).getFull_name());
-			System.out.println(match.getMatch().getAwayPlayers().get(match.getMatch().getAwayPlayers().size()-1).getFull_name());
-			
 		}
 		return match;
 	}
@@ -275,48 +276,47 @@ public class IndexController
 	{
 		if(match != null && match.getMatchId() > 0) {
 			
-			List<Player> h_players = new ArrayList<Player>();
-			List<Player> a_players = new ArrayList<Player>();
+			List<Player> players = new ArrayList<Player>();
 			Team team = null;
 			match = badmintonService.getMatch(match.getMatchId());
 			
 			if(match.getHomeFirstPlayerId() != null) {
-				h_players.add(badmintonService.getPlayer(match.getHomeFirstPlayerId()));
-				team = badmintonService.getTeam(h_players.get(h_players.size() - 1).getTeamId());
-				h_players.get(h_players.size() - 1).setTeam(team);
+				players.add(badmintonService.getPlayer(match.getHomeFirstPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
 			}
 			if(match.getHomeSecondPlayerId() != null) {
-				h_players.add(badmintonService.getPlayer(match.getHomeSecondPlayerId()));
-				team = badmintonService.getTeam(h_players.get(h_players.size() - 1).getTeamId());
-				h_players.get(h_players.size() - 1).setTeam(team);
+				players.add(badmintonService.getPlayer(match.getHomeSecondPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
 			}
 			if(match.getHomeThirdPlayerId() != null) {
-				h_players.add(badmintonService.getPlayer(match.getHomeThirdPlayerId()));
-				team = badmintonService.getTeam(h_players.get(h_players.size() - 1).getTeamId());
-				h_players.get(h_players.size() - 1).setTeam(team);
+				players.add(badmintonService.getPlayer(match.getHomeThirdPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
 			}
-			match.setHomePlayers(h_players);
+			match.setHomePlayers(players);
 			if(team != null)
 				match.setHomeTeam(team);
 			
-			//players.clear();
+			players = new ArrayList<Player>();
 			team = null;
 			if(match.getAwayFirstPlayerId() != null) {
-				a_players.add(badmintonService.getPlayer(match.getAwayFirstPlayerId()));
-				team = badmintonService.getTeam(a_players.get(a_players.size() - 1).getTeamId());
-				a_players.get(a_players.size() - 1).setTeam(team);
+				players.add(badmintonService.getPlayer(match.getAwayFirstPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
 			}
 			if(match.getAwaySecondPlayerId() != null) {
-				a_players.add(badmintonService.getPlayer(match.getAwaySecondPlayerId()));
-				team = badmintonService.getTeam(a_players.get(a_players.size() - 1).getTeamId());
-				a_players.get(a_players.size() - 1).setTeam(team);
+				players.add(badmintonService.getPlayer(match.getAwaySecondPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
 			}
 			if(match.getAwayThirdPlayerId() != null) {
-				a_players.add(badmintonService.getPlayer(match.getAwayThirdPlayerId()));
-				team = badmintonService.getTeam(a_players.get(a_players.size() - 1).getTeamId());
-				a_players.get(a_players.size() - 1).setTeam(team);
+				players.add(badmintonService.getPlayer(match.getAwayThirdPlayerId()));
+				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
+				players.get(players.size() - 1).setTeam(team);
 			}
-			match.setAwayPlayers(a_players);
+			match.setAwayPlayers(players);
 			if(team != null)
 				match.setAwayTeam(team);
 			
