@@ -1,4 +1,4 @@
-var golden_point_win_team,count_of_golden_point=0;
+var Set_1_home,Set_1_away;
 function processWaitingButtonSpinner(whatToProcess) 
 {
 	switch (whatToProcess) {
@@ -29,12 +29,21 @@ function initialiseForm(whatToProcess, dataToProcess)
 	switch (whatToProcess){
 		
 	case 'on_Strike':
-		if($('#select_onstrike_player option:selected').text() == 'select player'){
-			document.getElementById('match_summary').innerHTML = '';	
-		}else{
-			document.getElementById('match_summary').innerHTML = $('#select_onstrike_player option:selected').text() + ' is on strike';	
-		}	
+		document.getElementById('match_summary').innerHTML = $('#select_onstrike_player option:selected').text() + ' is on strike';		
 		break;
+		
+	/*case 'SET-VALUES':
+		
+		alert(document.getElementById('match_set_summary'));
+		if(document.getElementById('match_set_summary') != null){
+			document.getElementById('match_set_summary').innerHTML = 'SET-1: ' + parseInt($('#home_scores_count').val()) + '-' + 
+				parseInt($('#away_scores_count').val());
+		}
+		if(document.getElementById('match_set_summary') != null){
+			document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + '/' +
+				'SET-2: ' + parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
+		}
+		break;*/
 	
 	case 'RESET_SET_STATS': case 'RESET_ALL_STATS':
 	
@@ -98,14 +107,6 @@ function initialiseForm(whatToProcess, dataToProcess)
 function processUserSelection(whichInput)
 {	
 	switch ($(whichInput).attr('id')) {
-		
-	case 'save_button':
-		if($('#golder_points_check_box').is(":checked")){
-			count_of_golden_point = count_of_golden_point + 1;
-			document.getElementById("golder_points_check_box").checked = false;
-		}
-		processBadmintonProcedures('SAVE_BUTTON_GP');
-		break;
 	
 	case 'select_onstrike_player':
 		processBadmintonProcedures('ON-STRIKE_PLAYER');
@@ -128,8 +129,8 @@ function processUserSelection(whichInput)
 		initialiseForm('RESET_SET_STATS',null);
 		break;
 	
-	case 'end_set': 
-	
+	case 'end_set':
+		alert($('#home_scores_count').val() + '-' + $('#away_scores_count').val())
 		if($('#home_scores_count').val() > $('#away_scores_count').val()) {
 			if(confirm('End set with ' + $('#select_onstrike_player option:first').text() + ' winning the set') == false) {
 				return false;
@@ -155,7 +156,7 @@ function processUserSelection(whichInput)
 			return false;
 		}
 		initialiseForm('RESET_SET_STATS',null);
-		
+		uploadFormDataToSessionObjects('RESET_SET');
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		break;
@@ -166,6 +167,8 @@ function processUserSelection(whichInput)
 			return false;
 		}
 		initialiseForm('RESET_ALL_STATS',null);
+		uploadFormDataToSessionObjects('RESET_ALL');
+		location.reload();
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		
@@ -220,16 +223,13 @@ function processUserSelection(whichInput)
 	    			if($('#golder_points_check_box').is(":checked")){
 						
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
-						);
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2);
 
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2
-						);
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2);
 						
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1
-						);
+						/*$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);*/
 						
 					}else{
 
@@ -295,7 +295,7 @@ function uploadFormDataToSessionObjects(whatToProcess)
 			}
 		);
 		break;
-	case 'START_SET': case 'END_SET':
+	case 'START_SET': case 'END_SET': case 'RESET_SET': case 'RESET_ALL':
 		url_path = whatToProcess.toLowerCase();
 		switch(whatToProcess.toUpperCase()) {
 		case 'END_SET':
@@ -344,20 +344,6 @@ function processBadmintonProcedures(whatToProcess)
 	case 'GOLDEN-POINTS_PLAYER':
 		valueToProcess = $('#select_golden_points_player option:selected').val() ;
 		break;
-		
-	case 'SAVE_BUTTON_GP':
-			valueToProcess = count_of_golden_point.toString();
-			break;
-	
-	case 'GOLDEN-HOME-POINTS':
-		valueToProcess = $('#' + $(whichInput).attr('id').split('_')[0]) ;
-		alert($('#' + $(whichInput).attr('id').split('_')[0]));
-		break;
-	
-	case 'GOLDEN-AWAY-POINTS':
-		valueToProcess = dataToProcess.match.awayTeam.teamId;
-		break;
-		
 	}
 	
 	
@@ -501,29 +487,28 @@ function addItemsToList(whatToProcess, dataToProcess){
 		
 		option = document.createElement('h6');
 		option.id = 'match_summary';
-		//option.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].full_name + ' is on strike';
+		option.innerHTML = 'Before start set first select the player who is on strike';
 		option.style = 'text-align:center';
 		document.getElementById('logging_stats_div').appendChild(option);
 		
-		/*option = document.createElement('h6');
-		//option.id = 'match_summary';
-		dataToProcess.sets.forEach(function(st,index,arr){
-			if(st.setNumber == 1) {
-				option.innerHTML = st.homeTeamTotalScore + "-" + st.awayTeamTotalScore; 			
+		option = document.createElement('h6');
+		option.id = 'match_set_summary';
+		/*dataToProcess.sets.forEach(function(st,index,arr){
+			if(st.setNumber == 1 && st.status == 'END'){
+				option.innerHTML = 'SET-1: ' + st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
 			}
-			if(st.setNumber == 2) {
-				option.innerHTML = st.homeTeamTotalScore + "-" + st.awayTeamTotalScore; 			
+			else if(st.setNumber == 2 && st.status == 'END'){
+				option.innerHTML = option.innerHTML + ',' + 'SET-2: ' + st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
 			}
-			if(st.setNumber == 3) {
-				option.innerHTML = st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
+			else if(st.setNumber == 3 && st.status == 'END'){
+				option.innerHTML = option.innerHTML + ',' + 'SET-3: ' + st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
 			}
-		});
+		});*/
 		option.style = 'text-align:center';
-		document.getElementById('logging_stats_div').appendChild(option);*/
+		document.getElementById('logging_stats_div').appendChild(option);
 		
 		option = document.createElement('select');
 		option.id = 'select_onstrike_player';
-		//option.style = 'width:150px;margin-left:5%;';
 		
 		list_option = document.createElement('option');
 		list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].playerId;
@@ -540,17 +525,11 @@ function addItemsToList(whatToProcess, dataToProcess){
 		text = document.createElement('label');
 		text.innerHTML = 'Choose On Strike Player: '
 		text.htmlFor = option.id;
-		//text.style = 'width:250px';
 		document.getElementById('logging_stats_div').appendChild(text).appendChild(option);
 		
 		option = document.createElement('select');
 		option.id = 'select_golden_points_player';
 		option.style = 'width:150px;margin-left:5%;';
-		
-		list_option = document.createElement('option');
-		list_option.value = '0';
-	    list_option.text = 'select player';
-		option.appendChild(list_option);
 		
 		list_option = document.createElement('option');
 		list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].playerId;
@@ -573,20 +552,12 @@ function addItemsToList(whatToProcess, dataToProcess){
 		checkbox_option = document.createElement('input');
 		checkbox_option.id = "golder_points_check_box";
 		checkbox_option.type = "checkbox";
-		//checkbox_option.setAttribute('onclick','processUserSelection(this);');
 		
 		label = document.createElement('label')
 		label.htmlFor = checkbox_option.id;
-		label.style = 'width:200px;';
+		label.style = 'width:200px;margin-top:2%;';
 		label.appendChild(document.createTextNode('Golden Points '));
 		document.getElementById('logging_stats_div').appendChild(label).appendChild(checkbox_option);
-		
-		option = document.createElement('button');
-		option.innerHTML = 'Save GP';
-		option.id = 'save_button';
-		option.style = 'width:110px;margin-top:1%;margin-left:3%;';
-		option.setAttribute('onclick','processUserSelection(this);');
-		document.getElementById('logging_stats_div').appendChild(option);
 		
 		table = document.createElement('table');
 		table.setAttribute('class', 'table table-bordered');
@@ -689,7 +660,6 @@ function addItemsToList(whatToProcess, dataToProcess){
 				break;
 			}
 			th.style='color:#008cff;text-align:center;';
-		    //th.appendChild(text);
 		    tr.appendChild(th);
 		}
 		thead = document.createElement('thead');

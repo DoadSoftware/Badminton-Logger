@@ -108,7 +108,7 @@ public class IndexController
 		return "logger";
 	}
 	
-	@RequestMapping(value = {"/save_stats_data","/start_set","/end_set"}, method={RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = {"/save_stats_data","/start_set","/end_set","/reset_set","/reset_all"}, method={RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody String uploadFormDataToSessionObjects(MultipartHttpServletRequest request)
 					throws IllegalAccessException, InvocationTargetException, IOException, JAXBException
 	{	
@@ -130,7 +130,22 @@ public class IndexController
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + 
 					session_match.getMatch().getMatchId() + BadmintonUtil.XML));
 		
-		} else if (request.getRequestURI().contains("start_set")) {
+		}else if (request.getRequestURI().contains("reset_set")) {
+			if(session_match.getSets() != null || session_match.getSets().size() > 0) {
+				session_match.getSets().remove(session_match.getSets().size() - 1);
+			}
+			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + 
+					session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+			
+		}else if (request.getRequestURI().contains("reset_all")) {
+			session_match = new BadmintonMatch(new Match(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", ""))));
+			
+			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + 
+					session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+			
+		}else if (request.getRequestURI().contains("start_set")) {
 			
 			if(session_match.getSets() == null || session_match.getSets().size() <= 0) {
 				session_match.setSets(new ArrayList<Set>());
@@ -146,7 +161,7 @@ public class IndexController
 			this_stats.add(new Stats(2, BadmintonUtil.FOREHAND_ERRORS));
 			this_stats.add(new Stats(3, BadmintonUtil.BACKHAND_WINNER ));
 			this_stats.add(new Stats(4, BadmintonUtil.BACKHAND_ERRORS));
-			this_stats.add(new Stats(5, BadmintonUtil.GOLDEN));
+			//this_stats.add(new Stats(5, BadmintonUtil.GOLDEN));
 			
 			for (Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
 				for(Stats stat : this_stats) {
@@ -226,19 +241,6 @@ public class IndexController
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));
 			return JSONObject.fromObject(session_match).toString();
 			
-		case "GOLDEN-HOME-POINTS": case "GOLDEN-AWAY-POINTS":
-			session_match.setGoldenPointsWonTeam(Integer.valueOf(valueToProcess));
-			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
-					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));
-			return JSONObject.fromObject(session_match).toString();
-			
-		case "SAVE_BUTTON_DATA":
-			session_match.setGoldenPointscount(Integer.valueOf(valueToProcess));
-			System.out.println(session_match.getGoldenPointscount());
-			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
-					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + BadmintonUtil.XML));
-			return JSONObject.fromObject(session_match).toString();
-		
 		default:
 			return JSONObject.fromObject(null).toString();
 		}

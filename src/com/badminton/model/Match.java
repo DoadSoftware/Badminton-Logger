@@ -44,8 +44,11 @@ public class Match {
   @Column(name = "superMatch")
   private Integer superMatch;
   
-  @Column(name = "trumpMatch")
-  private Integer trumpMatch;
+  @Column(name = "trumpHomeMatch")
+  private Integer trumpHomeMatch;
+  
+  @Column(name = "trumpAwayMatch")
+  private Integer trumpAwayMatch;
 
   @Transient
   private Team homeTeam;
@@ -164,12 +167,20 @@ public void setSuperMatch(Integer superMatch) {
 	this.superMatch = superMatch;
 }
 
-public Integer getTrumpMatch() {
-	return trumpMatch;
+public Integer getTrumpHomeMatch() {
+	return trumpHomeMatch;
 }
 
-public void setTrumpMatch(Integer trumpMatch) {
-	this.trumpMatch = trumpMatch;
+public void setTrumpHomeMatch(Integer trumpHomeMatch) {
+	this.trumpHomeMatch = trumpHomeMatch;
+}
+
+public Integer getTrumpAwayMatch() {
+	return trumpAwayMatch;
+}
+
+public void setTrumpAwayMatch(Integer trumpAwayMatch) {
+	this.trumpAwayMatch = trumpAwayMatch;
 }
 
 public List<Player> getHomePlayers() {

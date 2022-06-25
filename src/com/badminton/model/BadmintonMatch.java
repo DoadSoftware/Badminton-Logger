@@ -26,12 +26,6 @@ public class BadmintonMatch {
 
   @XmlElement
   private int awayTeamSetsWon;
-  
-  @XmlElement
-  private int goldenPointsWonTeam;
-  
-  @XmlElement
-  private int goldenPointscount;
  
   @XmlElementWrapper(name = "stats")
   @XmlElement(name = "stat")
@@ -126,22 +120,6 @@ public int getGoldenPointsPlayerId() {
 
 public void setGoldenPointsPlayerId(int goldenPointsPlayerId) {
 	this.goldenPointsPlayerId = goldenPointsPlayerId;
-}
-
-public int getGoldenPointsWonTeam() {
-	return goldenPointsWonTeam;
-}
-
-public void setGoldenPointsWonTeam(int goldenPointsWonTeam) {
-	this.goldenPointsWonTeam = goldenPointsWonTeam;
-}
-
-public int getGoldenPointscount() {
-	return goldenPointscount;
-}
-
-public void setGoldenPointscount(int goldenPointscount) {
-	this.goldenPointscount = goldenPointscount;
 }
 
 }
