@@ -37,6 +37,7 @@ import com.badminton.util.BadmintonUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+
 @Controller
 public class IndexController 
 {
@@ -123,6 +124,11 @@ public class IndexController
 					}
 				}
 	   		}
+			if(session_match.getHomeTeamSetsWon() > session_match.getAwayTeamSetsWon()) {
+				session_match.getSets().get(session_match.getSets().size() - 1).setWinningTeamId(session_match.getMatch().getHomeTeam().getTeamId());
+			} else {
+				session_match.getSets().get(session_match.getSets().size() - 1).setWinningTeamId(session_match.getMatch().getAwayTeam().getTeamId());
+			}
 			if(session_match.getSets() != null && session_match.getSets().size() > 0) {
 				session_match.getSets().get(session_match.getSets().size() - 1).setStatus(BadmintonUtil.END);
 			}
@@ -161,7 +167,7 @@ public class IndexController
 			this_stats.add(new Stats(2, BadmintonUtil.FOREHAND_ERRORS));
 			this_stats.add(new Stats(3, BadmintonUtil.BACKHAND_WINNER ));
 			this_stats.add(new Stats(4, BadmintonUtil.BACKHAND_ERRORS));
-			//this_stats.add(new Stats(5, BadmintonUtil.GOLDEN));
+			this_stats.add(new Stats(5, BadmintonUtil.GOLDEN));
 			
 			for (Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
 				for(Stats stat : this_stats) {
@@ -261,12 +267,12 @@ public class IndexController
 			Team team = null;
 			match = badmintonService.getMatch(match.getMatchId());
 			
-			if(match.getHomeFirstPlayerId() != null) {
+			if(match.getHomeFirstPlayerId() > 0) {
 				players.add(badmintonService.getPlayer(match.getHomeFirstPlayerId()));
 				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
 				players.get(players.size() - 1).setTeam(team);
 			}
-			if(match.getHomeSecondPlayerId() != null) {
+			if(match.getHomeSecondPlayerId() > 0) {
 				players.add(badmintonService.getPlayer(match.getHomeSecondPlayerId()));
 				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
 				players.get(players.size() - 1).setTeam(team);

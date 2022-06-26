@@ -40,7 +40,7 @@
   </div>
 </div>
 <input type="hidden" id="database_file_timestamp" name="database_file_timestamp" value="${session_match.database_file_timestamp}"></input>
-<input type="hidden" id="home_golden" name="home_golden"></input>
-<input type="hidden" id="away_golden" name="away_golden"></input>
+<input type="hidden" id="home_golden" name="home_golden" value= "0"></input>
+<input type="hidden" id="away_golden" name="away_golden" value= "0"></input>
 </body>
 </html>

@@ -130,14 +130,14 @@ function processUserSelection(whichInput)
 		break;
 	
 	case 'end_set':
-		alert($('#home_scores_count').val() + '-' + $('#away_scores_count').val())
-		if($('#home_scores_count').val() > $('#away_scores_count').val()) {
+		//alert($('#home_scores_count').val() + '-' + $('#away_scores_count').val())
+		if(parseInt($('#home_scores_count').val()) > parseInt($('#away_scores_count').val())) {
 			if(confirm('End set with ' + $('#select_onstrike_player option:first').text() + ' winning the set') == false) {
 				return false;
 			}
 			$('#home_sets_count').val(parseInt($('#home_sets_count').val()) + 1);
 			
-		}else if($('#away_scores_count').val() > $('#home_scores_count').val()) {
+		}else if(parseInt($('#away_scores_count').val()) > parseInt($('#home_scores_count').val())) {
 			if(confirm('End set with ' + $('#select_onstrike_player option:last').text() + ' winning the set') == false) {
 				return false;
 			}
@@ -194,42 +194,32 @@ function processUserSelection(whichInput)
 	default:
 	
 		if($(whichInput).attr('id').includes('_btn') && $(whichInput).attr('id').split('_').length >= 4) {
-
-			var ball_value = 0;
-    		switch ($(whichInput).attr('id').split('_')[2]) {
-    		case 'FW': case 'FE': case 'BW': case 'BE':
-    			ball_value = 1;
-    			break;
-    			
-			case 'Points':
-				if($('#golder_points_check_box').is(":checked")){
-					ball_value = 2;
-				}else{
-					ball_value = 1;
-				}
-				break;
-        			
-			}
+    		
     		switch ($(whichInput).attr('id').split('_')[1]) {
     		case 'increment':
 				
 				switch ($(whichInput).attr('id').split('_')[2]) {
 				case 'FW': case 'FE': case 'BW': case 'BE':
+	    			
 	    			$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-					parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1)
+					parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
+					);
+	    			
 	    			break;
 				
 	    		case 'Points': 
 	    			if($('#golder_points_check_box').is(":checked")){
 						
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2);
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
+						);
 
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2);
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2
+						);
 						
-						/*$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);*/
+						$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);
 						
 					}else{
 
@@ -240,7 +230,6 @@ function processUserSelection(whichInput)
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
 							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 1
 						);
-
 					}
 	        		
 	        		break;	
@@ -252,23 +241,33 @@ function processUserSelection(whichInput)
     			switch ($(whichInput).attr('id').split('_')[2]) {
 					
 				case 'FW': case 'FE': case 'BW': case 'BE':
+	    			
 	    			$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-					parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1)
+					parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
+					);
+	    			
 	    			break;
 				
 	    		case 'Points': 
 	    			if($('#golder_points_check_box').is(":checked")){
+						
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 2);
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 2
+						);
 							
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - ball_value);
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 2
+						);
+						
 					}else{
+						
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1);
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
+						);
 							
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - ball_value);
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 1
+						);
 					}
 	        		
 	        		break;	
@@ -599,7 +598,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 				}else{
 					switch(dataToProcess.match.categoryId){
 					case 1: case 2: case 3: case 4:
-						if(dataToProcess.match.trumpMatch == 1){
+						if(dataToProcess.match.trumpHomeMatch == 1 || dataToProcess.match.trumpAwayMatch == 1){
 							th.innerHTML = 'Trump Match';
 							
 							switch(dataToProcess.match.categoryId){
@@ -635,6 +634,11 @@ function addItemsToList(whatToProcess, dataToProcess){
 						break;	
 					}	
 				}
+				dataToProcess.sets.forEach(function(st,index,arr){
+					if(st.setNumber == 1 && st.status == 'END'){
+						option.innerHTML = 'SET-1: ' + st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
+					}
+				});
 			    th.innerHTML = th.innerHTML + "<br>" +'Detail'; 
 				break;
 			case 3:

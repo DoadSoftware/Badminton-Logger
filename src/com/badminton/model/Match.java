@@ -104,7 +104,12 @@ public void setHomeFirstPlayerId(Integer homeFirstPlayerId) {
 }
 
 public Integer getHomeSecondPlayerId() {
-	return homeSecondPlayerId;
+	if(homeSecondPlayerId == null) {
+		return 0 ;
+	}else {
+		return homeSecondPlayerId;
+	}
+	
 }
 
 public void setHomeSecondPlayerId(Integer homeSecondPlayerId) {
