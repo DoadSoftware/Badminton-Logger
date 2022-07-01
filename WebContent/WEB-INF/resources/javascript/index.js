@@ -1,4 +1,4 @@
-var Set_1_home,Set_1_away;
+var Store=0;
 function processWaitingButtonSpinner(whatToProcess) 
 {
 	switch (whatToProcess) {
@@ -31,19 +31,6 @@ function initialiseForm(whatToProcess, dataToProcess)
 	case 'on_Strike':
 		document.getElementById('match_summary').innerHTML = $('#select_onstrike_player option:selected').text() + ' is on strike';		
 		break;
-		
-	/*case 'SET-VALUES':
-		
-		alert(document.getElementById('match_set_summary'));
-		if(document.getElementById('match_set_summary') != null){
-			document.getElementById('match_set_summary').innerHTML = 'SET-1: ' + parseInt($('#home_scores_count').val()) + '-' + 
-				parseInt($('#away_scores_count').val());
-		}
-		if(document.getElementById('match_set_summary') != null){
-			document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + '/' +
-				'SET-2: ' + parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
-		}
-		break;*/
 	
 	case 'RESET_SET_STATS': case 'RESET_ALL_STATS':
 	
@@ -130,7 +117,8 @@ function processUserSelection(whichInput)
 		break;
 	
 	case 'end_set':
-		//alert($('#home_scores_count').val() + '-' + $('#away_scores_count').val())
+		Store = Store + 1 ;
+		
 		if(parseInt($('#home_scores_count').val()) > parseInt($('#away_scores_count').val())) {
 			if(confirm('End set with ' + $('#select_onstrike_player option:first').text() + ' winning the set') == false) {
 				return false;
@@ -143,8 +131,21 @@ function processUserSelection(whichInput)
 			}
 			$('#away_sets_count').val(parseInt($('#away_sets_count').val()) + 1);
 		}
-		
-		uploadFormDataToSessionObjects('END_SET');
+		switch(Store){
+			case 1:
+				document.getElementById('match_set_summary').innerHTML = 'SET: ' + parseInt($('#home_scores_count').val()) + '-' 
+					+ parseInt($('#away_scores_count').val());
+				break;
+			case 2:
+				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
+				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
+				break;
+			case 3:
+				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
+				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
+				break;
+		}
+		uploadFormDataToSessionObjects('END_SET')
 		initialiseForm('RESET_SET_STATS',null);
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
@@ -221,6 +222,8 @@ function processUserSelection(whichInput)
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
 							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);
 						
+						document.getElementById("golder_points_check_box").checked = false;
+						
 					}else{
 
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
@@ -258,6 +261,11 @@ function processUserSelection(whichInput)
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
 							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 2
 						);
+						
+						$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) - 1);
+						
+						document.getElementById("golder_points_check_box").checked = false;
 						
 					}else{
 						
@@ -492,17 +500,6 @@ function addItemsToList(whatToProcess, dataToProcess){
 		
 		option = document.createElement('h6');
 		option.id = 'match_set_summary';
-		/*dataToProcess.sets.forEach(function(st,index,arr){
-			if(st.setNumber == 1 && st.status == 'END'){
-				option.innerHTML = 'SET-1: ' + st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
-			}
-			else if(st.setNumber == 2 && st.status == 'END'){
-				option.innerHTML = option.innerHTML + ',' + 'SET-2: ' + st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
-			}
-			else if(st.setNumber == 3 && st.status == 'END'){
-				option.innerHTML = option.innerHTML + ',' + 'SET-3: ' + st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
-			}
-		});*/
 		option.style = 'text-align:center';
 		document.getElementById('logging_stats_div').appendChild(option);
 		
@@ -634,11 +631,6 @@ function addItemsToList(whatToProcess, dataToProcess){
 						break;	
 					}	
 				}
-				dataToProcess.sets.forEach(function(st,index,arr){
-					if(st.setNumber == 1 && st.status == 'END'){
-						option.innerHTML = 'SET-1: ' + st.homeTeamTotalScore + "-" + st.awayTeamTotalScore;
-					}
-				});
 			    th.innerHTML = th.innerHTML + "<br>" +'Detail'; 
 				break;
 			case 3:

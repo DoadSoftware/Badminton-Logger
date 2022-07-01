@@ -96,7 +96,7 @@ public class IndexController
 			session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
 				new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + selectedMatch)));
 		} else {
-			session_match = new BadmintonMatch(new Match(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", ""))));
+			session_match = populateMatchVariables(new BadmintonMatch(badmintonService.getMatch(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", "")))));
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + selectedMatch));
 		}
@@ -265,7 +265,6 @@ public class IndexController
 			
 			List<Player> players = new ArrayList<Player>();
 			Team team = null;
-			match = badmintonService.getMatch(match.getMatchId());
 			
 			if(match.getHomeFirstPlayerId() > 0) {
 				players.add(badmintonService.getPlayer(match.getHomeFirstPlayerId()));
@@ -277,7 +276,7 @@ public class IndexController
 				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
 				players.get(players.size() - 1).setTeam(team);
 			}
-			if(match.getHomeThirdPlayerId() != null) {
+			if(match.getHomeThirdPlayerId() > 0) {
 				players.add(badmintonService.getPlayer(match.getHomeThirdPlayerId()));
 				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
 				players.get(players.size() - 1).setTeam(team);
@@ -288,17 +287,17 @@ public class IndexController
 			
 			players = new ArrayList<Player>();
 			team = null;
-			if(match.getAwayFirstPlayerId() != null) {
+			if(match.getAwayFirstPlayerId() > 0) {
 				players.add(badmintonService.getPlayer(match.getAwayFirstPlayerId()));
 				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
 				players.get(players.size() - 1).setTeam(team);
 			}
-			if(match.getAwaySecondPlayerId() != null) {
+			if(match.getAwaySecondPlayerId() > 0) {
 				players.add(badmintonService.getPlayer(match.getAwaySecondPlayerId()));
 				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
 				players.get(players.size() - 1).setTeam(team);
 			}
-			if(match.getAwayThirdPlayerId() != null) {
+			if(match.getAwayThirdPlayerId() > 0) {
 				players.add(badmintonService.getPlayer(match.getAwayThirdPlayerId()));
 				team = badmintonService.getTeam(players.get(players.size() - 1).getTeamId());
 				players.get(players.size() - 1).setTeam(team);
