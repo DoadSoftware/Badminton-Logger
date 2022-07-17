@@ -96,7 +96,11 @@ public void setMatchId(Integer matchId) {
 }
 
 public Integer getHomeFirstPlayerId() {
-	return homeFirstPlayerId;
+	if(homeFirstPlayerId == null) {
+		return 0 ;
+	}else {
+		return homeFirstPlayerId;
+	}
 }
 
 public void setHomeFirstPlayerId(Integer homeFirstPlayerId) {
@@ -128,7 +132,11 @@ public void setHomeThirdPlayerId(Integer homeThirdPlayerId) {
 }
 
 public Integer getAwayFirstPlayerId() {
-	return awayFirstPlayerId;
+	if(awayFirstPlayerId == null) {
+		return 0 ;
+	}else {
+		return awayFirstPlayerId;
+	}
 }
 
 public void setAwayFirstPlayerId(Integer awayFirstPlayerId) {

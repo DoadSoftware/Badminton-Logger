@@ -169,7 +169,6 @@ function processUserSelection(whichInput)
 		}
 		initialiseForm('RESET_ALL_STATS',null);
 		uploadFormDataToSessionObjects('RESET_ALL');
-		location.reload();
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		
@@ -493,8 +492,13 @@ function addItemsToList(whatToProcess, dataToProcess){
 		}
 		
 		option = document.createElement('h6');
+		option.innerHTML = 'Match No: ' + dataToProcess.match.matchId;
+		option.style = 'text-align:center';
+		document.getElementById('logging_stats_div').appendChild(option);
+		
+		option = document.createElement('h6');
 		option.id = 'match_summary';
-		option.innerHTML = 'Before start set first select the player who is on strike';
+		option.innerHTML = 'Before start set first select the player who serve';
 		option.style = 'text-align:center';
 		document.getElementById('logging_stats_div').appendChild(option);
 		
@@ -505,42 +509,121 @@ function addItemsToList(whatToProcess, dataToProcess){
 		
 		option = document.createElement('select');
 		option.id = 'select_onstrike_player';
+		option.style = 'width:175px;';
 		
 		list_option = document.createElement('option');
-		list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].playerId;
-	    list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].full_name;
+		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
+			if(i==1){
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId;
+				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name;
+			}
+			else if(i==2){
+				a=i-1;
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId + "/" + 
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].playerId;
+				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "/" +
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name;
+			}else if(i==3){
+				a=i-1;
+				b=i-2;
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].playerId +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].playerId ;
+				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name ;
+			}
+		}
 		option.appendChild(list_option);
 		
 		list_option = document.createElement('option');
-		list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-1].playerId;
-	    list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-1].full_name;
-	    
-	    option.setAttribute('onclick','processUserSelection(this);');
+		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
+			if(i==1){
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId;
+				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name;
+			}
+			else if(i==2){
+				a=i-1;
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId + "/" + 
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].playerId;
+				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "/" +
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name;
+			}else if(i==3){
+				a=i-1;
+				b=i-2;
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].playerId +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].playerId ;
+				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name ;
+			}
+		}
+		option.setAttribute('onclick','processUserSelection(this);');
 		option.appendChild(list_option);
 		
 		text = document.createElement('label');
-		text.innerHTML = 'Choose On Strike Player: '
+		text.innerHTML = 'Select Serve: '
 		text.htmlFor = option.id;
 		document.getElementById('logging_stats_div').appendChild(text).appendChild(option);
 		
 		option = document.createElement('select');
 		option.id = 'select_golden_points_player';
-		option.style = 'width:150px;margin-left:5%;';
+		option.style = 'width:175px;';
 		
 		list_option = document.createElement('option');
-		list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].playerId;
-	    list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].full_name;
+		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
+			if(i==1){
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId;
+				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name;
+			}
+			else if(i==2){
+				a=i-1;
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId + "/" + 
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].playerId;
+				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "/" +
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name;
+			}else if(i==3){
+				a=i-1;
+				b=i-2;
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].playerId +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].playerId ;
+				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name ;
+			}
+		}
 		option.appendChild(list_option);
 		
 		list_option = document.createElement('option');
-		list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-1].playerId;
-	    list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-1].full_name;
-	    
-	    option.setAttribute('onclick','processUserSelection(this);');
+		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
+			if(i==1){
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId;
+				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name;
+			}
+			else if(i==2){
+				a=i-1;
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId + "/" + 
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].playerId;
+				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "/" +
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name;
+			}else if(i==3){
+				a=i-1;
+				b=i-2;
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].playerId +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].playerId ;
+				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name ;
+			}
+		}
+		option.setAttribute('onclick','processUserSelection(this);');
 		option.appendChild(list_option);
 		
 		text = document.createElement('label');
-		text.innerHTML = 'Choose who select GP: '
+		text.innerHTML = 'Choose who select Golden Points: '
 		text.htmlFor = option.id;
 		text.style = 'width:250px;';
 		document.getElementById('logging_stats_div').appendChild(text).appendChild(option);
@@ -569,15 +652,15 @@ function addItemsToList(whatToProcess, dataToProcess){
 					}
 					else if(i==2){
 						a=i-1;
-						th.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
-							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "<br>" +'(' +
+						th.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
+							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name + "<br>" +'(' +
 							dataToProcess.match.homeTeam.fullname + ')';
 					}else if(i==3){
 						a=i-1;
 						b=i-2;
-						th.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
-							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name +'/'+
-							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "<br>" +'(' +
+						th.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
+							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
+							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name + "<br>" +'(' +
 							dataToProcess.match.homeTeam.fullname + ')';
 					}
 				}
@@ -586,7 +669,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 				if(dataToProcess.match.categoryId == 0){
 					switch(dataToProcess.match.superMatch){
 						case 1:
-						th.innerHTML = 'Super Match';
+						th.innerHTML = th.innerHTML + "<br>" +'Super Match';
 						if(dataToProcess.match.trumpMatch == 1){
 							th.innerHTML = th.innerHTML + "<br>" +'Trump Match';
 						}
@@ -641,15 +724,15 @@ function addItemsToList(whatToProcess, dataToProcess){
 					}
 					else if(i==2){
 						a=i-1;
-						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+ 
-							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "<br>" +'(' +
+						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+ 
+							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name + "<br>" +'(' +
 							dataToProcess.match.awayTeam.fullname + ')';
 					}else if(i==3){
 						a=i-1;
 						b=i-2;
-						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
-							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name +'/'+
-							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "<br>" +'(' +
+						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
+							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
+							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name + "<br>" +'(' +
 							dataToProcess.match.awayTeam.fullname + ')';
 					}
 				} 

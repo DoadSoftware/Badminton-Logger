@@ -13,11 +13,23 @@ public class Team {
   @Column(name = "TEAMID")
   private int teamId;
 	
+  @Column(name = "FIRSTNAME")
+  private String firstname;
+  
+  @Column(name = "LASTNAME")
+  private String lastname;
+  
   @Column(name = "FULLNAME")
   private String fullname;
 
   @Column(name = "SHORTNAME")
   private String shortname;
+  
+  @Column(name = "GROUPNAME")
+  private String groupname;
+  
+  @Column(name = "TEAMCOLOR")
+  private String teamcolor;
 
 public int getTeamId() {
 	return teamId;
@@ -25,6 +37,22 @@ public int getTeamId() {
 
 public void setTeamId(int teamId) {
 	this.teamId = teamId;
+}
+
+public String getFirstname() {
+	return firstname;
+}
+
+public void setFirstname(String firstname) {
+	this.firstname = firstname;
+}
+
+public String getLastname() {
+	return lastname;
+}
+
+public void setLastname(String lastname) {
+	this.lastname = lastname;
 }
 
 public String getFullname() {
@@ -42,10 +70,26 @@ public String getShortname() {
 public void setShortname(String shortname) {
 	this.shortname = shortname;
 }
+public String getGroupname() {
+	return groupname;
+}
+
+public void setGroupname(String groupname) {
+	this.groupname = groupname;
+}
+
+public String getTeamcolor() {
+	return teamcolor;
+}
+
+public void setTeamcolor(String teamcolor) {
+	this.teamcolor = teamcolor;
+}
 
 @Override
 public String toString() {
-	return "Team [teamId=" + teamId + ", fullname=" + fullname + ", shortname=" + shortname + "]";
+	return "Team [teamId=" + teamId + ", firstname=" + firstname + ", lastname=" + lastname + ", fullname=" + fullname + ", shortname=" + shortname + 
+			", groupname=" + groupname + ", teamcolor=" + teamcolor + "]";
 }
 
 }
