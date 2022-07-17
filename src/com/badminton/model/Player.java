@@ -23,6 +23,18 @@ public class Player
   @Column(name = "TEAMID")
   private int teamId;
   
+  @Column(name = "AGE")
+  private String age;
+  
+  @Column(name = "TEXT1")
+  private String text1;
+  
+  @Column(name = "TEXT2")
+  private String text2;
+  
+  @Column(name = "RANK")
+  private String rank;
+  
   @Transient
   private Team team;
   
@@ -56,6 +68,38 @@ public int getTeamId() {
 
 public void setTeamId(int teamId) {
 	this.teamId = teamId;
+}
+
+public String getAge() {
+	return age;
+}
+
+public void setAge(String age) {
+	this.age = age;
+}
+
+public String getText1() {
+	return text1;
+}
+
+public void setText1(String text1) {
+	this.text1 = text1;
+}
+
+public String getText2() {
+	return text2;
+}
+
+public void setText2(String text2) {
+	this.text2 = text2;
+}
+
+public String getRank() {
+	return rank;
+}
+
+public void setRank(String rank) {
+	this.rank = rank;
 }
 
 public Team getTeam() {
