@@ -25,9 +25,6 @@ public class Team {
   @Column(name = "SHORTNAME")
   private String shortname;
   
-  @Column(name = "GROUPNAME")
-  private String groupname;
-  
   @Column(name = "TEAMCOLOR")
   private String teamcolor;
 
@@ -70,13 +67,6 @@ public String getShortname() {
 public void setShortname(String shortname) {
 	this.shortname = shortname;
 }
-public String getGroupname() {
-	return groupname;
-}
-
-public void setGroupname(String groupname) {
-	this.groupname = groupname;
-}
 
 public String getTeamcolor() {
 	return teamcolor;
@@ -89,7 +79,7 @@ public void setTeamcolor(String teamcolor) {
 @Override
 public String toString() {
 	return "Team [teamId=" + teamId + ", firstname=" + firstname + ", lastname=" + lastname + ", fullname=" + fullname + ", shortname=" + shortname + 
-			", groupname=" + groupname + ", teamcolor=" + teamcolor + "]";
+			", teamcolor=" + teamcolor + "]";
 }
 
 }

@@ -1,4 +1,4 @@
-var Store=0;
+var Store=0,home_count=0,away_count=0;
 function processWaitingButtonSpinner(whatToProcess) 
 {
 	switch (whatToProcess) {
@@ -27,9 +27,27 @@ function reloadPage(whichPage)
 function initialiseForm(whatToProcess, dataToProcess)
 {
 	switch (whatToProcess){
-		
+	
+	case 'Points':
+		dataToProcess.match.forEach(function(match,index,array){
+			home_count == match.numberOfPoints
+			
+		});
+		break;
+	
+	case 'home_st':
+		document.getElementById('select_onstrike_player').selectedIndex = 0 ;
+		document.getElementById('match_summary').innerHTML = $('#select_onstrike_player option:first').text() + ' is on Serve';
+		processBadmintonProcedures('ON-STRIKE_PLAYER');	
+		break;
+	case 'away_st':
+		document.getElementById('select_onstrike_player').selectedIndex = 1 ;
+		document.getElementById('match_summary').innerHTML = $('#select_onstrike_player option:last').text() + ' is on Serve';
+		processBadmintonProcedures('ON-STRIKE_PLAYER');	
+		break;	
+	
 	case 'on_Strike':
-		document.getElementById('match_summary').innerHTML = $('#select_onstrike_player option:selected').text() + ' is on strike';		
+		document.getElementById('match_summary').innerHTML = $('#select_onstrike_player option:selected').text() + ' is on Serve';		
 		break;
 	
 	case 'RESET_SET_STATS': case 'RESET_ALL_STATS':
@@ -106,7 +124,7 @@ function processUserSelection(whichInput)
 		
 	case 'start_set': 
 		
-		if(confirm('Starting set with ' + $('#select_onstrike_player option:selected').text() + ' on strike') == false) {
+		if(confirm('Starting set with ' + $('#select_onstrike_player option:selected').text() + ' on Serve') == false) {
 			return false;
 		}
 		
@@ -169,6 +187,8 @@ function processUserSelection(whichInput)
 		}
 		initialiseForm('RESET_ALL_STATS',null);
 		uploadFormDataToSessionObjects('RESET_ALL');
+		document.getElementById('match_set_summary').innerHTML = " ";
+		//location.reload();
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		
@@ -224,16 +244,25 @@ function processUserSelection(whichInput)
 						document.getElementById("golder_points_check_box").checked = false;
 						
 					}else{
-
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
-						);
-
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 1
-						);
+						
+						//initialiseForm('Points',null);
+						//alert('Hi');
+						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < 15){
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
+							);
+	
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 1
+							);
+						}
+						
+						if($(whichInput).attr('id').split('_')[0] == 'home'){
+							initialiseForm('home_st',null);
+						}else{
+							initialiseForm('away_st',null);
+						}
 					}
-	        		
 	        		break;	
 				}
 				break;
@@ -243,38 +272,44 @@ function processUserSelection(whichInput)
     			switch ($(whichInput).attr('id').split('_')[2]) {
 					
 				case 'FW': case 'FE': case 'BW': case 'BE':
-	    			
-	    			$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-					parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
-					);
-	    			
+					if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
+						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+						parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
+						);
+					}
 	    			break;
 				
 	    		case 'Points': 
 	    			if($('#golder_points_check_box').is(":checked")){
-						
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 2
-						);
+						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 2
+							);
+								
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 2
+							);
 							
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 2
-						);
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) - 1);
+							
+							document.getElementById("golder_points_check_box").checked = false;
+						}
 						
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) - 1);
 						
-						document.getElementById("golder_points_check_box").checked = false;
 						
 					}else{
 						
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
-						);
-							
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 1
-						);
+						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
+							);
+								
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 1
+							);
+						}
+						
 					}
 	        		
 	        		break;	

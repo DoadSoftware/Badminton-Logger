@@ -16,6 +16,9 @@ public class Match {
   @Id
   @Column(name = "matchId")
   private Integer matchId;
+  
+  @Column(name = "GROUPNAME")
+  private String groupname;
 	
   @Column(name = "homeFirstPlayerId")
   private Integer homeFirstPlayerId ;
@@ -37,6 +40,9 @@ public class Match {
   
   @Column(name = "numberOfSets")
   private Integer numberOfSets;
+  
+  @Column(name = "numberOfPoints")
+  private Integer numberOfPoints;
   
   @Column(name = "categoryId")
   private Integer categoryId;
@@ -95,12 +101,22 @@ public void setMatchId(Integer matchId) {
 	this.matchId = matchId;
 }
 
+public String getGroupname() {
+	return groupname;
+}
+
+public void setGroupname(String groupname) {
+	this.groupname = groupname;
+}
+
 public Integer getHomeFirstPlayerId() {
-	if(homeFirstPlayerId == null) {
-		return 0 ;
+	/*if(homeFirstPlayerId == null) {
+		return 0;
 	}else {
 		return homeFirstPlayerId;
-	}
+	}*/
+	return homeFirstPlayerId;
+	
 }
 
 public void setHomeFirstPlayerId(Integer homeFirstPlayerId) {
@@ -109,10 +125,11 @@ public void setHomeFirstPlayerId(Integer homeFirstPlayerId) {
 
 public Integer getHomeSecondPlayerId() {
 	if(homeSecondPlayerId == null) {
-		return 0 ;
+		return 0;
 	}else {
 		return homeSecondPlayerId;
 	}
+	
 }
 
 public void setHomeSecondPlayerId(Integer homeSecondPlayerId) {
@@ -121,10 +138,11 @@ public void setHomeSecondPlayerId(Integer homeSecondPlayerId) {
 
 public Integer getHomeThirdPlayerId() {
 	if(homeThirdPlayerId == null) {
-		return 0 ;
+		return 0;
 	}else {
 		return homeThirdPlayerId;
 	}
+	
 }
 
 public void setHomeThirdPlayerId(Integer homeThirdPlayerId) {
@@ -133,10 +151,11 @@ public void setHomeThirdPlayerId(Integer homeThirdPlayerId) {
 
 public Integer getAwayFirstPlayerId() {
 	if(awayFirstPlayerId == null) {
-		return 0 ;
+		return 0;
 	}else {
 		return awayFirstPlayerId;
 	}
+	
 }
 
 public void setAwayFirstPlayerId(Integer awayFirstPlayerId) {
@@ -145,10 +164,11 @@ public void setAwayFirstPlayerId(Integer awayFirstPlayerId) {
 
 public Integer getAwaySecondPlayerId() {
 	if(awaySecondPlayerId == null) {
-		return 0 ;
+		return 0;
 	}else {
 		return awaySecondPlayerId;
-	}	
+	}
+	
 }
 
 public void setAwaySecondPlayerId(Integer awaySecondPlayerId) {
@@ -157,10 +177,11 @@ public void setAwaySecondPlayerId(Integer awaySecondPlayerId) {
 
 public Integer getAwayThirdPlayerId() {
 	if(awayThirdPlayerId == null) {
-		return 0 ;
+		return 0;
 	}else {
 		return awayThirdPlayerId;
-	}	
+	}
+	
 }
 
 public void setAwayThirdPlayerId(Integer awayThirdPlayerId) {
@@ -173,6 +194,14 @@ public Integer getNumberOfSets() {
 
 public void setNumberOfSets(Integer numberOfSets) {
 	this.numberOfSets = numberOfSets;
+}
+
+public Integer getNumberOfPoints() {
+	return numberOfPoints;
+}
+
+public void setNumberOfPoints(Integer numberOfPoints) {
+	this.numberOfPoints = numberOfPoints;
 }
 
 public Integer getCategoryId() {
