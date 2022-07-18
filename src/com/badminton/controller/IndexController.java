@@ -148,14 +148,15 @@ public class IndexController
 			
 		}else if (request.getRequestURI().contains("reset_all")) {
 			session_match = populateMatchVariables(new BadmintonMatch(badmintonService.getMatch(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", "")))));
+			
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+ selectedMatch));
 			
-			session_match = new BadmintonMatch(new Match(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", ""))));
+			//session_match = new BadmintonMatch(new Match(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", ""))));
 			
-			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
-					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+
-					session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+			//JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
+					//new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+
+					//session_match.getMatch().getMatchId() + BadmintonUtil.XML));
 			
 		}else if (request.getRequestURI().contains("start_set")) {
 			

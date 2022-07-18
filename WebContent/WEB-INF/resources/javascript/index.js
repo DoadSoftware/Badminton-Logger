@@ -28,12 +28,11 @@ function initialiseForm(whatToProcess, dataToProcess)
 {
 	switch (whatToProcess){
 	
-	case 'Points':
+	/*case 'Points':
 		dataToProcess.match.forEach(function(match,index,array){
 			home_count == match.numberOfPoints
-			
 		});
-		break;
+		break;*/
 	
 	case 'home_st':
 		document.getElementById('select_onstrike_player').selectedIndex = 0 ;
@@ -176,6 +175,7 @@ function processUserSelection(whichInput)
 		}
 		initialiseForm('RESET_SET_STATS',null);
 		uploadFormDataToSessionObjects('RESET_SET');
+		document.getElementById('match_summary').innerHTML = 'Before start set first select the player who serve';
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		break;
@@ -187,8 +187,9 @@ function processUserSelection(whichInput)
 		}
 		initialiseForm('RESET_ALL_STATS',null);
 		uploadFormDataToSessionObjects('RESET_ALL');
+		document.getElementById('match_summary').innerHTML = 'Before start set first select the player who serve';
 		document.getElementById('match_set_summary').innerHTML = " ";
-		//location.reload();
+		Store = 0;
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		
