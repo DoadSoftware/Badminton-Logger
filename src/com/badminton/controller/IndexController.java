@@ -37,7 +37,6 @@ import com.badminton.util.BadmintonUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-
 @Controller
 public class IndexController 
 {
@@ -91,17 +90,22 @@ public class IndexController
 		selectedMatch = match;
 		selectedBroadcaster = select_broadcaster;
 		session_Configurations = new Configurations(selectedMatch, select_broadcaster);
-				
-		if(new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + selectedMatch).exists()) {
+		
+		Match this_match = badmintonService.getMatch(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", "")));
+		
+		if(new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + 
+				this_match.getGroupname() + "_" + selectedMatch).exists()) {
 			
 			session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
-				new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+ selectedMatch)));
+				new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + this_match.getGroupname() + "_" + selectedMatch)));
 		
 		} else {
-			session_match = populateMatchVariables(new BadmintonMatch(badmintonService.getMatch(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", "")))));
+			session_match = populateMatchVariables(new BadmintonMatch(
+					badmintonService.getMatch(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", "")))));
 			
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
-					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+ selectedMatch));
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + 
+					session_match.getMatch().getGroupname() + "_" + selectedMatch));
 		}
 		
 		session_match.setDatabase_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
@@ -141,24 +145,21 @@ public class IndexController
 					session_match.getMatch().getMatchId() + BadmintonUtil.XML));
 		
 		}else if (request.getRequestURI().contains("reset_set")) {
+
 			if(session_match.getSets() != null || session_match.getSets().size() > 0) {
 				session_match.getSets().remove(session_match.getSets().size() - 1);
 			}
+			
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+
 					session_match.getMatch().getMatchId() + BadmintonUtil.XML));
 			
 		}else if (request.getRequestURI().contains("reset_all")) {
+			
 			session_match = populateMatchVariables(new BadmintonMatch(badmintonService.getMatch(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", "")))));
 			
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+ selectedMatch));
-			
-			//session_match = new BadmintonMatch(new Match(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", ""))));
-			
-			//JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
-					//new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+
-					//session_match.getMatch().getMatchId() + BadmintonUtil.XML));
 			
 		}else if (request.getRequestURI().contains("start_set")) {
 			
@@ -167,7 +168,6 @@ public class IndexController
 			}
 			session_match.getSets().add(new Set(session_match.getSets().size() + 1, BadmintonUtil.START, 
 					session_match.getMatch().getHomePlayers(), session_match.getMatch().getAwayPlayers(), session_match.getStats()));
-
 			
 		} else if (request.getRequestURI().contains("save_stats_data")) {
 			
@@ -205,7 +205,8 @@ public class IndexController
 				session_match.getSets().get(session_match.getSets().size() - 1).setStats(this_stats);
 			}
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
-					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+ session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + 
+					session_match.getMatch().getGroupname() +"_"+ session_match.getMatch().getMatchId() + BadmintonUtil.XML));
 		}
 		return JSONObject.fromObject(session_match).toString();
 	}
@@ -223,15 +224,10 @@ public class IndexController
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + BadmintonUtil.DATABASE_FILE).lastModified())))
 			{
 				session_match.setMatch(populateMatchVariables(session_match.getMatch()));
-				//System.out.println("Points of home team in Super Match" + session_match.getSets().get(0).getHomeTeamTotalScore());
 				
 				JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+
 						session_match.getMatch().getMatchId() + BadmintonUtil.XML));
-				
-				//session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
-						//new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() + "_" + selectedMatch)));
-				//System.out.println("Selected Match: " + selectedMatch);
 				
 				session_match.setDatabase_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
 						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + BadmintonUtil.DATABASE_FILE).lastModified()));

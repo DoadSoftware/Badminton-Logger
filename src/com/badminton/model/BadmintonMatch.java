@@ -37,6 +37,9 @@ public class BadmintonMatch {
   
   @XmlTransient
   private String database_file_timestamp;
+
+  @XmlElement
+  private String match_file_name;
   
   @XmlTransient
   private List<Match> matches;
@@ -44,6 +47,14 @@ public class BadmintonMatch {
 public BadmintonMatch(Match match) {
 	super();
 	this.match = match;
+}
+
+public String getMatch_file_name() {
+	return match_file_name;
+}
+
+public void setMatch_file_name(String match_file_name) {
+	this.match_file_name = match_file_name;
 }
 
 public int getHomeTeamSetsWon() {

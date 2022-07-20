@@ -29,15 +29,10 @@ function initialiseForm(whatToProcess, dataToProcess)
 	switch (whatToProcess){
 	
 	case 'REPOPULATE_DATABASE_DATA':
-		//alert('homeTeamTotalScore :' + dataToProcess.sets[0].homeTeamTotalScore);
-		//$('#home_scores_count').val(dataToProcess.sets[0].homeTeamTotalScore);
+		$('#home_scores_count').val(dataToProcess.sets[0].homeTeamTotalScore);
+		$('#away_scores_count').val(dataToProcess.sets[0].awayTeamTotalScore);
 		break;
 	
-	/*case 'Points':
-		dataToProcess.match.forEach(function(match,index,array){
-			home_count == match.numberOfPoints
-		});
-		break;*/
 	case 'golden_points':
 		document.getElementById('select_golden_points_player').selectedIndex = 0 ;
 		processBadmintonProcedures('GOLDEN-POINTS_PLAYER');	
@@ -258,7 +253,7 @@ function processUserSelection(whichInput)
 				case 'FW': case 'FE': case 'BW': case 'BE':
 	    			
 	    			$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-					parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
+						parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
 					);
 	    			
 	    			break;
@@ -443,7 +438,6 @@ function processBadmintonProcedures(whatToProcess)
 				if(data){
 					if($('#database_file_timestamp').val() != data.database_file_timestamp) {
 						document.getElementById('database_file_timestamp').value = data.database_file_timestamp;
-						//addItemsToList('LOAD_MATCH',data);
 						initialiseForm('REPOPULATE_DATABASE_DATA',data)
 					}
 				}
@@ -479,7 +473,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 			option = document.createElement('option');
 			option.value = match.matchId + '.xml';
 				
-			option.innerHTML =  'match'+ match.matchId + ' ' + match.groupname;
+			option.innerHTML =  'match '+ match.matchId + ' ' + match.groupname;
 			list_option.append(option);
 		});
 		break;
@@ -789,13 +783,12 @@ function addItemsToList(whatToProcess, dataToProcess){
 					if(i==1){
 						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "<br>" +'(' +
 							dataToProcess.match.awayTeam.fullname + ')';
-					}
-					else if(i==2){
+					} else if(i==2){
 						a=i-1;
 						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+ 
 							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name + "<br>" +'(' +
 							dataToProcess.match.awayTeam.fullname + ')';
-					}else if(i==3){
+					} else if(i==3){
 						a=i-1;
 						b=i-2;
 						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
@@ -873,8 +866,8 @@ function addItemsToList(whatToProcess, dataToProcess){
 		    				option.id = home_or_away + "_" + stats_type;
 		    				option.style = 'width:25%;text-align:center;';
 		    				dataToProcess.stats.forEach(function(item) {
-							alert(item.statType + ',' + item.homeStatCount + ',' + item.awayStatCount);
-								if(option.name.toUpperCase().includes(item.statType)) {
+								//alert(item.statType + ',' + item.homeStatCount + ',' + item.awayStatCount);
+								if(option.name.toUpperCase().includes(item.statType.toUpperCase())) {
 									switch(j) {
 									case 0:
 										option.value = item.homeStatCount;
