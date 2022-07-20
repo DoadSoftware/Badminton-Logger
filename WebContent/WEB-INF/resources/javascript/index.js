@@ -1,4 +1,4 @@
-var Store=0,home_count=0,away_count=0;
+var Store=0,start_end_count=0,home_count=0,away_count=0;
 function processWaitingButtonSpinner(whatToProcess) 
 {
 	switch (whatToProcess) {
@@ -33,6 +33,10 @@ function initialiseForm(whatToProcess, dataToProcess)
 			home_count == match.numberOfPoints
 		});
 		break;*/
+	case 'golden_points':
+		document.getElementById('select_golden_points_player').selectedIndex = 0 ;
+		processBadmintonProcedures('GOLDEN-POINTS_PLAYER');	
+		break;
 	
 	case 'home_st':
 		document.getElementById('select_onstrike_player').selectedIndex = 0 ;
@@ -122,10 +126,22 @@ function processUserSelection(whichInput)
 		break;
 		
 	case 'start_set': 
-		
+		Store = Store + 1 ;
 		if(confirm('Starting set with ' + $('#select_onstrike_player option:selected').text() + ' on Serve') == false) {
 			return false;
 		}
+		switch(Store){
+			case 1:
+				document.getElementById('start_end_set_summary').innerHTML = 'SET1: START' ;
+				break;
+			case 2:
+				document.getElementById('start_end_set_summary').innerHTML = 'SET2: START' ;
+				break;
+			case 3:
+				document.getElementById('start_end_set_summary').innerHTML = 'SET3: START' ;
+				break;
+		}
+		
 		
 		uploadFormDataToSessionObjects('START_SET');
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',false);
@@ -134,8 +150,7 @@ function processUserSelection(whichInput)
 		break;
 	
 	case 'end_set':
-		Store = Store + 1 ;
-		
+		document.getElementById('match_summary').innerHTML = 'Before start set first select the player who serve';
 		if(parseInt($('#home_scores_count').val()) > parseInt($('#away_scores_count').val())) {
 			if(confirm('End set with ' + $('#select_onstrike_player option:first').text() + ' winning the set') == false) {
 				return false;
@@ -150,14 +165,17 @@ function processUserSelection(whichInput)
 		}
 		switch(Store){
 			case 1:
+				document.getElementById('start_end_set_summary').innerHTML = 'SET1: END' ;
 				document.getElementById('match_set_summary').innerHTML = 'SET: ' + parseInt($('#home_scores_count').val()) + '-' 
 					+ parseInt($('#away_scores_count').val());
 				break;
 			case 2:
+				document.getElementById('start_end_set_summary').innerHTML = 'SET2: END' ;
 				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
 				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
 				break;
 			case 3:
+				document.getElementById('start_end_set_summary').innerHTML = 'SET3: END' ;
 				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
 				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
 				break;
@@ -175,7 +193,18 @@ function processUserSelection(whichInput)
 		}
 		initialiseForm('RESET_SET_STATS',null);
 		uploadFormDataToSessionObjects('RESET_SET');
-		document.getElementById('match_summary').innerHTML = 'Before start set first select the player who serve';
+		switch(Store){
+			case 1:
+				Store = 0;
+				break;
+			case 2:
+				Store = 1;
+				break;
+			case 3:
+				Store = 2;
+				break;
+		}
+		
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		break;
@@ -189,7 +218,9 @@ function processUserSelection(whichInput)
 		uploadFormDataToSessionObjects('RESET_ALL');
 		document.getElementById('match_summary').innerHTML = 'Before start set first select the player who serve';
 		document.getElementById('match_set_summary').innerHTML = " ";
+		document.getElementById('start_end_set_summary').innerHTML = " ";
 		Store = 0;
+		
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		
@@ -243,6 +274,7 @@ function processUserSelection(whichInput)
 							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);
 						
 						document.getElementById("golder_points_check_box").checked = false;
+						initialiseForm('golden_points',null);
 						
 					}else{
 						
@@ -539,6 +571,11 @@ function addItemsToList(whatToProcess, dataToProcess){
 		document.getElementById('logging_stats_div').appendChild(option);
 		
 		option = document.createElement('h6');
+		option.id = 'start_end_set_summary';
+		option.style = 'text-align:center';
+		document.getElementById('logging_stats_div').appendChild(option);
+		
+		option = document.createElement('h6');
 		option.id = 'match_set_summary';
 		option.style = 'text-align:center';
 		document.getElementById('logging_stats_div').appendChild(option);
@@ -555,16 +592,13 @@ function addItemsToList(whatToProcess, dataToProcess){
 			}
 			else if(i==2){
 				a=i-1;
-				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId + "/" + 
-					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].playerId;
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId;
 				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "/" +
 					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name;
 			}else if(i==3){
 				a=i-1;
 				b=i-2;
-				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId +'/'+
-					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].playerId +'/'+
-					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].playerId ;
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId ;
 				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
 					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
 					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name ;
@@ -580,16 +614,13 @@ function addItemsToList(whatToProcess, dataToProcess){
 			}
 			else if(i==2){
 				a=i-1;
-				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId + "/" + 
-					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].playerId;
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId;
 				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "/" +
 					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name;
 			}else if(i==3){
 				a=i-1;
 				b=i-2;
-				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId +'/'+
-					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].playerId +'/'+
-					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].playerId ;
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId;
 				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
 					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
 					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name ;
@@ -608,6 +639,11 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option.style = 'width:175px;';
 		
 		list_option = document.createElement('option');
+		list_option.value = 0;
+		list_option.text = 'select';
+		option.appendChild(list_option);
+		
+		list_option = document.createElement('option');
 		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
 			if(i==1){
 				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId;
@@ -615,16 +651,13 @@ function addItemsToList(whatToProcess, dataToProcess){
 			}
 			else if(i==2){
 				a=i-1;
-				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId + "/" + 
-					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].playerId;
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId ;
 				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "/" +
 					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name;
 			}else if(i==3){
 				a=i-1;
 				b=i-2;
-				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId +'/'+
-					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].playerId +'/'+
-					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].playerId ;
+				list_option.value = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].playerId ;
 				list_option.text = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
 					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
 					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name ;
@@ -640,16 +673,13 @@ function addItemsToList(whatToProcess, dataToProcess){
 			}
 			else if(i==2){
 				a=i-1;
-				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId + "/" + 
-					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].playerId;
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId ;
 				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "/" +
 					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name;
 			}else if(i==3){
 				a=i-1;
 				b=i-2;
-				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId +'/'+
-					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].playerId +'/'+
-					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].playerId ;
+				list_option.value = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].playerId ;
 				list_option.text = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
 					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
 					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name ;
