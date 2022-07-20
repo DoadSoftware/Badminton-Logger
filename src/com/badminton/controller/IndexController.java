@@ -99,9 +99,11 @@ public class IndexController
 		
 		} else {
 			session_match = populateMatchVariables(new BadmintonMatch(badmintonService.getMatch(Integer.valueOf(selectedMatch.toUpperCase().replace(".XML", "")))));
+			
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+ selectedMatch));
 		}
+		
 		session_match.setDatabase_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
 		
 		model.addAttribute("session_match", session_match);
@@ -220,8 +222,16 @@ public class IndexController
 			if(!valueToProcess.equalsIgnoreCase(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + BadmintonUtil.DATABASE_FILE).lastModified())))
 			{
-				session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
-						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+ selectedMatch)));
+				session_match.setMatch(populateMatchVariables(session_match.getMatch()));
+				//System.out.println("Points of home team in Super Match" + session_match.getSets().get(0).getHomeTeamTotalScore());
+				
+				JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
+						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+
+						session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+				
+				//session_match = populateMatchVariables((BadmintonMatch) JAXBContext.newInstance(BadmintonMatch.class).createUnmarshaller().unmarshal(
+						//new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() + "_" + selectedMatch)));
+				//System.out.println("Selected Match: " + selectedMatch);
 				
 				session_match.setDatabase_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
 						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + BadmintonUtil.DATABASE_FILE).lastModified()));
@@ -272,6 +282,8 @@ public class IndexController
 	public Match populateMatchVariables(Match match)
 	{
 		if(match != null && match.getMatchId() > 0) {
+			
+			match = badmintonService.getMatch(match.getMatchId());
 			
 			List<Player> players = new ArrayList<Player>();
 			Team team = null;

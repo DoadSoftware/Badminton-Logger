@@ -1,4 +1,4 @@
-var Store=0,start_end_count=0,home_count=0,away_count=0;
+var Store=0,home_count=0,away_count=0;
 function processWaitingButtonSpinner(whatToProcess) 
 {
 	switch (whatToProcess) {
@@ -27,6 +27,11 @@ function reloadPage(whichPage)
 function initialiseForm(whatToProcess, dataToProcess)
 {
 	switch (whatToProcess){
+	
+	case 'REPOPULATE_DATABASE_DATA':
+		//alert('homeTeamTotalScore :' + dataToProcess.sets[0].homeTeamTotalScore);
+		//$('#home_scores_count').val(dataToProcess.sets[0].homeTeamTotalScore);
+		break;
 	
 	/*case 'Points':
 		dataToProcess.match.forEach(function(match,index,array){
@@ -204,7 +209,6 @@ function processUserSelection(whichInput)
 				Store = 2;
 				break;
 		}
-		
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		break;
@@ -274,13 +278,20 @@ function processUserSelection(whichInput)
 							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);
 						
 						document.getElementById("golder_points_check_box").checked = false;
+						
 						initialiseForm('golden_points',null);
+						
+						if($(whichInput).attr('id').split('_')[0] == 'home'){
+							initialiseForm('home_st',null);
+						}else{
+							initialiseForm('away_st',null);
+						}
 						
 					}else{
 						
 						//initialiseForm('Points',null);
 						//alert('Hi');
-						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < 15){
+						//if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < 15){
 							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
 								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
 							);
@@ -288,7 +299,7 @@ function processUserSelection(whichInput)
 							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
 								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 1
 							);
-						}
+						//}
 						
 						if($(whichInput).attr('id').split('_')[0] == 'home'){
 							initialiseForm('home_st',null);
@@ -432,7 +443,8 @@ function processBadmintonProcedures(whatToProcess)
 				if(data){
 					if($('#database_file_timestamp').val() != data.database_file_timestamp) {
 						document.getElementById('database_file_timestamp').value = data.database_file_timestamp;
-						addItemsToList('LOAD_MATCH',data);
+						//addItemsToList('LOAD_MATCH',data);
+						initialiseForm('REPOPULATE_DATABASE_DATA',data)
 					}
 				}
 				break;
@@ -467,17 +479,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 			option = document.createElement('option');
 			option.value = match.matchId + '.xml';
 				
-			for(var i=1; i <= match.homePlayers.length,i <= match.awayPlayers.length;i++){
-				if(i==1){
-					option.innerHTML = match.homePlayers[match.homePlayers.length-i].full_name + ' v ' + 
-					match.awayPlayers[match.awayPlayers.length-i].full_name + ' (' + match.numberOfSets + ')';
-				}
-				else if(i==2){
-					j=i-1;
-					option.innerHTML = match.homePlayers[match.homePlayers.length-j].full_name +'/'+match.homePlayers[match.homePlayers.length-i].full_name+ ' v ' + 
-					match.awayPlayers[match.awayPlayers.length-j].full_name +'/'+ match.awayPlayers[match.awayPlayers.length-i].full_name + ' (' + match.numberOfSets + ')';
-				}
-			}
+			option.innerHTML =  'match'+ match.matchId + ' ' + match.groupname;
 			list_option.append(option);
 		});
 		break;
@@ -870,24 +872,26 @@ function addItemsToList(whatToProcess, dataToProcess){
 		    				option.type = "text";
 		    				option.id = home_or_away + "_" + stats_type;
 		    				option.style = 'width:25%;text-align:center;';
+		    				dataToProcess.stats.forEach(function(item) {
+							alert(item.statType + ',' + item.homeStatCount + ',' + item.awayStatCount);
+								if(option.name.toUpperCase().includes(item.statType)) {
+									switch(j) {
+									case 0:
+										option.value = item.homeStatCount;
+										break;
+									case 2:
+										option.value = item.awayStatCount;
+										break;
+									}
+								}
+							});	
 		    				break;
 						}
-						dataToProcess.stats.forEach(function(item) {
-							if(option.name.toUpperCase().includes(item.statType)) {
-								switch(j) {
-								case 0:
-									option.value = item.homeStatCount;
-									break;
-								case 2:
-									option.value = item.awayStatCount;
-									break;
-								}
-							}
-						});			
-							if(!option.value) {
-								option.value = '0';
-							}			
-			div.appendChild(option);
+								
+						if(!option.value) {
+							option.value = '0';
+						}			
+						div.appendChild(option);
 				    }	
 				    break;
 				case 1:
