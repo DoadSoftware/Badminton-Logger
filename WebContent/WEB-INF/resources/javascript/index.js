@@ -1,4 +1,4 @@
-var Store=0,home_count=0,away_count=0;
+var Store=0,count=0;
 function processWaitingButtonSpinner(whatToProcess) 
 {
 	switch (whatToProcess) {
@@ -29,8 +29,103 @@ function initialiseForm(whatToProcess, dataToProcess)
 	switch (whatToProcess){
 	
 	case 'REPOPULATE_DATABASE_DATA':
-		$('#home_scores_count').val(dataToProcess.sets[0].homeTeamTotalScore);
-		$('#away_scores_count').val(dataToProcess.sets[0].awayTeamTotalScore);
+		
+		if(dataToProcess.sets){
+			$('#home_sets_count').val(dataToProcess.homeTeamSetsWon);
+			$('#away_sets_count').val(dataToProcess.awayTeamSetsWon);
+			
+			$('#home_scores_count').val(dataToProcess.sets[dataToProcess.sets.length-1].homeTeamTotalScore);
+			$('#away_scores_count').val(dataToProcess.sets[dataToProcess.sets.length-1].awayTeamTotalScore);
+			
+			$('#home_Points').val(dataToProcess.sets[dataToProcess.sets.length-1].homeTeamTotalScore);
+			$('#home_FW').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[1].homeStatCount);
+			$('#home_FE').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[2].homeStatCount);
+			$('#home_BW').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[3].homeStatCount);
+			$('#home_BE').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[4].homeStatCount);
+			$('#home_golden').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[5].homeStatCount);
+			
+			$('#away_Points').val(dataToProcess.sets[dataToProcess.sets.length-1].awayTeamTotalScore);
+			$('#away_FW').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[1].awayStatCount);
+			$('#away_FE').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[2].awayStatCount);
+			$('#away_BW').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[3].awayStatCount);
+			$('#away_BE').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[4].awayStatCount);
+			$('#away_golden').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[5].awayStatCount);
+		}
+
+		//$('#select_onstrike_player').val(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-2].full_name + "/" +
+							//dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].full_name);
+							
+		/*switch(Store){
+			case 1:
+				document.getElementById('match_set_summary').innerHTML = 'SET: ' + parseInt($('#home_scores_count').val()) + '-' 
+					+ parseInt($('#away_scores_count').val());
+				break;
+			case 2:
+				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
+				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
+				break;
+			case 3:
+				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
+				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
+				break;
+		}*/
+		
+		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
+			if(i==1){
+				$('#select_home_player').text(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + '\n' + 
+					'('+ dataToProcess.match.homeTeam.fullname + ')');
+			}
+			else if(i==2){
+				a=i-1;
+				$('#select_home_player').text(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "/" +
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name + '\n' + 
+					'('+ dataToProcess.match.homeTeam.fullname + ')');
+			}else if(i==3){
+				a=i-1;
+				b=i-2;
+				$('#select_home_player').text(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name + '\n' + 
+					'('+ dataToProcess.match.homeTeam.fullname + ')');
+			}
+		}
+		
+		for(var i=1; i <= dataToProcess.match.awayPlayers.length;i++){
+			if(i==1){
+				$('#select_away_player').text(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + '\n' + 
+					'('+ dataToProcess.match.awayTeam.fullname + ')');
+			}
+			else if(i==2){
+				a=i-1;
+				$('#select_away_player').text(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "/" +
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name + '\n' + 
+					'('+ dataToProcess.match.awayTeam.fullname + ')');
+			}else if(i==3){
+				a=i-1;
+				b=i-2;
+				$('#select_away_player').text(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name + '\n' + 
+					'('+ dataToProcess.match.awayTeam.fullname + ')');
+			}
+		}
+		
+		break;
+	
+	case 'Points':
+		if(dataToProcess.match.categoryId == 0){
+			switch(dataToProcess.match.superMatch){
+				case 1:
+					count = 100;
+					break;
+			}
+		}else{
+			switch(dataToProcess.match.categoryId){
+				case 1: case 2: case 3: case 4:
+					count = parseInt(dataToProcess.match.numberOfPoints);
+					break;
+			}
+		}	
 		break;
 	
 	case 'golden_points':
@@ -144,6 +239,7 @@ function processUserSelection(whichInput)
 		
 		
 		uploadFormDataToSessionObjects('START_SET');
+		processBadmintonProcedures('POINTS_COUNT');
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',false);
 		$('#logging_stats_div').find("input").prop('disabled',false);
 		initialiseForm('RESET_SET_STATS',null);
@@ -260,14 +356,15 @@ function processUserSelection(whichInput)
 				
 	    		case 'Points': 
 	    			if($('#golder_points_check_box').is(":checked")){
-						
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
-						);
-
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2
-						);
+						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
+							);
+	
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2
+							);
+						}
 						
 						$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
 							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);
@@ -284,9 +381,8 @@ function processUserSelection(whichInput)
 						
 					}else{
 						
-						//initialiseForm('Points',null);
-						//alert('Hi');
-						//if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < 15){
+						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
+							
 							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
 								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
 							);
@@ -294,7 +390,7 @@ function processUserSelection(whichInput)
 							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
 								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 1
 							);
-						//}
+						}
 						
 						if($(whichInput).attr('id').split('_')[0] == 'home'){
 							initialiseForm('home_st',null);
@@ -334,9 +430,7 @@ function processUserSelection(whichInput)
 							
 							document.getElementById("golder_points_check_box").checked = false;
 						}
-						
-						
-						
+
 					}else{
 						
 						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
@@ -441,6 +535,9 @@ function processBadmintonProcedures(whatToProcess)
 						initialiseForm('REPOPULATE_DATABASE_DATA',data)
 					}
 				}
+				break;
+			case 'POINTS_COUNT':
+				initialiseForm('Points',data);
 				break;
 			case 'LOAD_MATCHES': case 'LOAD_MATCH':
 				addItemsToList(whatToProcess,data)
@@ -707,25 +804,33 @@ function addItemsToList(whatToProcess, dataToProcess){
 		    th = document.createElement('th'); //column
 		    switch (j) {
 			case 1:
-			     for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
+				option = document.createElement('label');
+				option.id = 'select_home_player';
+				option.style = 'width:150px;';
+				
+				//list_option = document.createElement('option');
+				for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
 					if(i==1){
-						th.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "<br>" +'(' +
-							dataToProcess.match.homeTeam.fullname + ')';
+						option.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "<br>" + 
+							'('+ dataToProcess.match.homeTeam.fullname + ')';
 					}
 					else if(i==2){
 						a=i-1;
-						th.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
-							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name + "<br>" +'(' +
-							dataToProcess.match.homeTeam.fullname + ')';
+						option.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "/" +
+							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name + "<br>" + 
+							'('+ dataToProcess.match.homeTeam.fullname + ')';
 					}else if(i==3){
 						a=i-1;
 						b=i-2;
-						th.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
-							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
-							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name + "<br>" +'(' +
-							dataToProcess.match.homeTeam.fullname + ')';
-					}
+						option.innerHTML = dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "/" +
+							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+ 
+							dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name + "<br>" +
+							'('+ dataToProcess.match.homeTeam.fullname + ')';
+					}	
+						
 				}
+				//option.appendChild(list_option);
+			    th.appendChild(option); 
 				break;
 			case 2:
 				if(dataToProcess.match.categoryId == 0){
@@ -779,24 +884,33 @@ function addItemsToList(whatToProcess, dataToProcess){
 			    th.innerHTML = th.innerHTML + "<br>" +'Detail'; 
 				break;
 			case 3:
-			    for(var i=1;i <= dataToProcess.match.awayPlayers.length;i++){
+				option = document.createElement('label');
+				option.id = 'select_away_player';
+				option.style = 'width:175px;';
+				
+				//list_option = document.createElement('option');
+				for(var i=1; i <= dataToProcess.match.awayPlayers.length;i++){
 					if(i==1){
-						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "<br>" +'(' +
-							dataToProcess.match.awayTeam.fullname + ')';
-					} else if(i==2){
+						option.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "<br>" + 
+							'('+ dataToProcess.match.awayTeam.fullname + ')';
+					}
+					else if(i==2){
 						a=i-1;
-						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+ 
-							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name + "<br>" +'(' +
-							dataToProcess.match.awayTeam.fullname + ')';
-					} else if(i==3){
+						option.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "/" +
+							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name + "<br>" + 
+							'('+ dataToProcess.match.awayTeam.fullname + ')';
+					}else if(i==3){
 						a=i-1;
 						b=i-2;
-						th.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
-							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
-							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name + "<br>" +'(' +
-							dataToProcess.match.awayTeam.fullname + ')';
+						option.innerHTML = dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "/" +
+							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name + "/" +
+							dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name + "<br>" + 
+							'('+ dataToProcess.match.awayTeam.fullname + ')';
 					}
-				} 
+				}
+				//option.appendChild(list_option);
+			    th.appendChild(option);
+			    
 				break;
 			}
 			th.style='color:#008cff;text-align:center;';

@@ -32,8 +32,17 @@ public class Player
   @Column(name = "TEXT2")
   private String text2;
   
-  @Column(name = "RANK")
-  private String rank;
+  @Column(name = "BAIRANKING")
+  private String baiRanking;
+  
+  @Column(name = "BWFRANKING")
+  private String bwfRanking;
+  
+  @Column(name = "ICONPLAYER")
+  private String iconPlayer;
+  
+  @Column(name = "PLAYERPHOTONAME")
+  private String playerPhotoName;
   
   @Transient
   private Team team;
@@ -94,12 +103,36 @@ public void setText2(String text2) {
 	this.text2 = text2;
 }
 
-public String getRank() {
-	return rank;
+public String getBaiRanking() {
+	return baiRanking;
 }
 
-public void setRank(String rank) {
-	this.rank = rank;
+public void setBaiRanking(String baiRanking) {
+	this.baiRanking = baiRanking;
+}
+
+public String getBwfRanking() {
+	return bwfRanking;
+}
+
+public void setBwfRanking(String bwfRanking) {
+	this.bwfRanking = bwfRanking;
+}
+
+public String getIconPlayer() {
+	return iconPlayer;
+}
+
+public void setIconPlayer(String iconPlayer) {
+	this.iconPlayer = iconPlayer;
+}
+
+public String getPlayerPhotoName() {
+	return playerPhotoName;
+}
+
+public void setPlayerPhotoName(String playerPhotoName) {
+	this.playerPhotoName = playerPhotoName;
 }
 
 public Team getTeam() {

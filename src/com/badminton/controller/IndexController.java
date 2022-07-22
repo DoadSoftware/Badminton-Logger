@@ -173,11 +173,12 @@ public class IndexController
 			
 			List<Stats> this_stats = new ArrayList<Stats>();
 			
-			this_stats.add(new Stats(1, BadmintonUtil.FOREHAND_WINNER));
-			this_stats.add(new Stats(2, BadmintonUtil.FOREHAND_ERRORS));
-			this_stats.add(new Stats(3, BadmintonUtil.BACKHAND_WINNER ));
-			this_stats.add(new Stats(4, BadmintonUtil.BACKHAND_ERRORS));
-			this_stats.add(new Stats(5, BadmintonUtil.GOLDEN));
+			this_stats.add(new Stats(1, BadmintonUtil.POINTS));
+			this_stats.add(new Stats(2, BadmintonUtil.FOREHAND_WINNER));
+			this_stats.add(new Stats(3, BadmintonUtil.FOREHAND_ERRORS));
+			this_stats.add(new Stats(4, BadmintonUtil.BACKHAND_WINNER ));
+			this_stats.add(new Stats(5, BadmintonUtil.BACKHAND_ERRORS));
+			this_stats.add(new Stats(6, BadmintonUtil.GOLDEN));
 			
 			for (Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
 				for(Stats stat : this_stats) {
@@ -219,6 +220,9 @@ public class IndexController
 	{	
 
 		switch (whatToProcess.toUpperCase()) {
+		case "POINTS_COUNT":
+			return JSONObject.fromObject(session_match).toString();
+			
 		case "READ-DATABASE-AND-POPULATE":
 			if(!valueToProcess.equalsIgnoreCase(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + BadmintonUtil.DATABASE_FILE).lastModified())))
@@ -254,6 +258,7 @@ public class IndexController
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getGroupname() +"_"+ 
 							session_match.getMatch().getMatchId() + BadmintonUtil.XML));
+			
 			return JSONObject.fromObject(session_match).toString();
 			
 		case "GOLDEN-POINTS_PLAYER":
