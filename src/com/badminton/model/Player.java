@@ -41,8 +41,8 @@ public class Player
   @Column(name = "ICONPLAYER")
   private String iconPlayer;
   
-  @Column(name = "PLAYERPHOTONAME")
-  private String playerPhotoName;
+  @Column(name = "PLAYERPHOTONAMES")
+  private String playerPhotoNames;
   
   @Transient
   private Team team;
@@ -127,12 +127,12 @@ public void setIconPlayer(String iconPlayer) {
 	this.iconPlayer = iconPlayer;
 }
 
-public String getPlayerPhotoName() {
-	return playerPhotoName;
+public String getPlayerPhotoNames() {
+	return playerPhotoNames;
 }
 
-public void setPlayerPhotoName(String playerPhotoName) {
-	this.playerPhotoName = playerPhotoName;
+public void setPlayerPhotoNames(String playerPhotoNames) {
+	this.playerPhotoNames = playerPhotoNames;
 }
 
 public Team getTeam() {
