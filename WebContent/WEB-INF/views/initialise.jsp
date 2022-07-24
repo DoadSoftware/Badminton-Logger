@@ -42,6 +42,14 @@
 			          <option value="DOAD_In_House_Everest">DOAD In House Everest</option>
 			      </select>
 			    </div>
+			    <div id="tournamentName_div" class="form-group row row-bottom-margin ml-2" style="margin-bottom:5px;">
+			    <label for="tournamentName" class="col-sm-4 col-form-label text-left">Tournament Name</label>
+			    <div class="col-sm-6 col-md-6">
+		             <input type="text" id="tournamentName" name="tournamentName" value="GRAND PRIX BADMINTON LEAGUE - 2022"
+		             	class="form-control form-control-sm floatlabel"></input>
+		              <label id="tournamentName-validation" style="color:red; display: none;"></label> 
+			    </div>
+			  </div>
 		    <button style="background-color:#2E008B;color:#FEFEFE;" class="btn btn-sm" type="submit"
 		  		name="load_match_btn" id="load_match_btn" >
 		  		<i class="fa fa-futbol-o" aria-hidden="true"></i> Load Match</button>

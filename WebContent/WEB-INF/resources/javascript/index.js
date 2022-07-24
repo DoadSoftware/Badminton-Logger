@@ -1,4 +1,4 @@
-var Store=0,count=0;
+var Store=0,count=0,session_match;
 function processWaitingButtonSpinner(whatToProcess) 
 {
 	switch (whatToProcess) {
@@ -17,6 +17,7 @@ function reloadPage(whichPage)
 	switch(whichPage){
 	case 'INITIALISE':
 		processUserSelection(document.getElementById('select_broadcaster'));
+		//processUserSelection(document.getElementById('tournamentName'));
 		processBadmintonProcedures('LOAD_MATCHES');
 		break;
 	case 'LOGGER':
@@ -51,24 +52,6 @@ function initialiseForm(whatToProcess, dataToProcess)
 			$('#away_BE').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[4].awayStatCount);
 			$('#away_golden').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[5].awayStatCount);
 		}
-
-		//$('#select_onstrike_player').val(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-2].full_name + "/" +
-							//dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-1].full_name);
-							
-		/*switch(Store){
-			case 1:
-				document.getElementById('match_set_summary').innerHTML = 'SET: ' + parseInt($('#home_scores_count').val()) + '-' 
-					+ parseInt($('#away_scores_count').val());
-				break;
-			case 2:
-				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
-				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
-				break;
-			case 3:
-				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
-				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
-				break;
-		}*/
 		
 		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
 			if(i==1){
@@ -321,15 +304,19 @@ function processUserSelection(whichInput)
 		
 		break;
 	
-	
 	case 'select_broadcaster':
 		switch ($('#select_broadcaster :selected').val().toUpperCase()) {
 		case 'DOAD_IN_HOUSE_EVEREST':
 			$('#vizPortNumber').attr('value','1980');
+			//$('#tournamentName').attr('value','GRAND PRIX BADMINTON LEAGUE - 2022');
 			$('label[for=vizScene], input#vizScene').hide();
 			break;
 		}
 		break;
+	
+	/*case 'tournamentName':
+		processBadmintonProcedures('TOURNAMENT_NAME');
+		break;*/
 		
 	case 'load_match_btn':
 		if(checkEmpty($('#vizIPAddress'),'IP Address Blank') == false) {
@@ -381,22 +368,29 @@ function processUserSelection(whichInput)
 						
 					}else{
 						
-						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
+						if(session_match.sets[session_match.sets.length - 1].status == 'START'){
+							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
 							
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
-							);
-	
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 1
-							);
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
+								);
+		
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 1
+								);
+								
+								if($(whichInput).attr('id').split('_')[0] == 'home'){
+									initialiseForm('home_st',null);
+								}else{
+									initialiseForm('away_st',null);
+								}
+							}
+						}
+						else{
+							alert(session_match.sets[session_match.sets.length - 1].status);
+							break;
 						}
 						
-						if($(whichInput).attr('id').split('_')[0] == 'home'){
-							initialiseForm('home_st',null);
-						}else{
-							initialiseForm('away_st',null);
-						}
 					}
 	        		break;	
 				}
@@ -487,9 +481,11 @@ function uploadFormDataToSessionObjects(whatToProcess)
         cache: false,
         contentType: false,
         processData: false,
-        type: 'POST',     
+        type: 'POST',
+        dataType : 'json',     
         success : function(response) {
-
+			session_match = response;
+			
         	switch(whatToProcess.toUpperCase()) {
         	case 'SAVE_STATS':
         		break;
@@ -518,6 +514,10 @@ function processBadmintonProcedures(whatToProcess)
 	case 'GOLDEN-POINTS_PLAYER':
 		valueToProcess = $('#select_golden_points_player option:selected').val() ;
 		break;
+		
+	/*case 'TOURNAMENT_NAME':
+		valueToProcess = $('#tournamentName').val();
+		break;*/
 	}
 	
 	
@@ -568,9 +568,9 @@ function addItemsToList(whatToProcess, dataToProcess){
 		list_option = document.getElementById('selectedMatch');
 		dataToProcess.forEach(function(match,index,array){
 			option = document.createElement('option');
-			option.value = match.matchId + '.xml';
+			option.value = match.matchId;
 				
-			option.innerHTML =  'match '+ match.matchId + ' ' + match.groupname;
+			option.innerHTML = match.matchId + '_' + match.groupname + '_' + match.matchnumber;
 			list_option.append(option);
 		});
 		break;
@@ -653,7 +653,7 @@ function addItemsToList(whatToProcess, dataToProcess){
 		}
 		
 		option = document.createElement('h6');
-		option.innerHTML = 'Match No: ' + dataToProcess.match.matchId;
+		option.innerHTML = 'Match No: ' + dataToProcess.match.matchnumber;
 		option.style = 'text-align:center';
 		document.getElementById('logging_stats_div').appendChild(option);
 		

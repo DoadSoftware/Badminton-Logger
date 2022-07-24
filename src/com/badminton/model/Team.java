@@ -25,6 +25,12 @@ public class Team {
   @Column(name = "SHORTNAME")
   private String shortname;
   
+  @Column(name = "MENTORNAME")
+  private String mentorName;
+  
+  @Column(name = "GROUPNAME")
+  private String groupname;
+  
   @Column(name = "TEAMCOLOR")
   private String teamcolor;
 
@@ -68,6 +74,22 @@ public void setShortname(String shortname) {
 	this.shortname = shortname;
 }
 
+public String getMentorName() {
+	return mentorName;
+}
+
+public void setMentorName(String mentorName) {
+	this.mentorName = mentorName;
+}
+
+public String getGroupname() {
+	return groupname;
+}
+
+public void setGroupname(String groupname) {
+	this.groupname = groupname;
+}
+
 public String getTeamcolor() {
 	return teamcolor;
 }
@@ -79,7 +101,7 @@ public void setTeamcolor(String teamcolor) {
 @Override
 public String toString() {
 	return "Team [teamId=" + teamId + ", firstname=" + firstname + ", lastname=" + lastname + ", fullname=" + fullname + ", shortname=" + shortname + 
-			", teamcolor=" + teamcolor + "]";
+			", mentorName=" + mentorName + ", groupname=" + groupname + ", teamcolor=" + teamcolor + "]";
 }
 
 }

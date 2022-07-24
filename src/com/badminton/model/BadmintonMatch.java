@@ -16,6 +16,9 @@ public class BadmintonMatch {
   private Match match;
   
   @XmlElement
+  private String tournamentName;
+  
+  @XmlElement
   private int onStrikePlayerId;
   
   @XmlElement
@@ -115,6 +118,14 @@ public String getDatabase_file_timestamp() {
 
 public void setDatabase_file_timestamp(String database_file_timestamp) {
 	this.database_file_timestamp = database_file_timestamp;
+}
+
+public String getTournamentName() {
+	return tournamentName;
+}
+
+public void setTournamentName(String tournamentName) {
+	this.tournamentName = tournamentName;
 }
 
 public int getOnStrikePlayerId() {
