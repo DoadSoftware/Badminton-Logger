@@ -45,7 +45,7 @@
 			    <div id="tournamentName_div" class="form-group row row-bottom-margin ml-2" style="margin-bottom:5px;">
 			    <label for="tournamentName" class="col-sm-4 col-form-label text-left">Tournament Name</label>
 			    <div class="col-sm-6 col-md-6">
-		             <input type="text" id="tournamentName" name="tournamentName" value="GRAND PRIX BADMINTON LEAGUE - 2022"
+		             <input type="text" id="tournamentName" name="tournamentName" value="${session_Configurations.tournamentName}"
 		             	class="form-control form-control-sm floatlabel"></input>
 		              <label id="tournamentName-validation" style="color:red; display: none;"></label> 
 			    </div>

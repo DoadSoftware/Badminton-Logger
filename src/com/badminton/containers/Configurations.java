@@ -14,11 +14,16 @@ public class Configurations {
 	
 	@XmlElement(name="broadcaster")
 	private String broadcaster;
+	
+	@XmlElement(name="tournamentName")
+	private String tournamentName;
 
-	public Configurations(String filename, String broadcaster) {
+	
+	public Configurations(String filename, String broadcaster, String tournamentName) {
 		super();
 		this.filename = filename;
 		this.broadcaster = broadcaster;
+		this.tournamentName = tournamentName;
 	}
 	
 	public Configurations() {
@@ -26,6 +31,14 @@ public class Configurations {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public String getTournamentName() {
+		return tournamentName;
+	}
+
+	public void setTournamentName(String tournamentName) {
+		this.tournamentName = tournamentName;
+	}
+
 	public String getBroadcaster() {
 		return broadcaster;
 	}

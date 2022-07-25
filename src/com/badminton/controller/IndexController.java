@@ -47,6 +47,7 @@ public class IndexController
 	public static BadmintonMatch session_match;
 	public static String selectedMatch;
 	public static String selectedBroadcaster;
+	public static String tournament_Name;
 	
 	@RequestMapping(value = {"/","/initialise"}, method={RequestMethod.GET,RequestMethod.POST}) 
 	public String initialisePage(ModelMap model) throws JAXBException, IOException  
@@ -84,12 +85,16 @@ public class IndexController
 	public String loggerPage(ModelMap model, MultipartHttpServletRequest request,
 			@RequestParam(value = "select_broadcaster", required = false, defaultValue = "") String select_broadcaster,
 			@RequestParam(value = "selectedMatch", required = false, defaultValue = "") String match,
+			@RequestParam(value = "tournamentName", required = false, defaultValue = "") String tournamentName,
 			@RequestParam(value = "session_socket", required = false, defaultValue = "") String Socket)
 			throws UnknownHostException,JAXBException, IOException,IllegalAccessException,InvocationTargetException, InterruptedException
 	{
 		selectedMatch = match;
 		selectedBroadcaster = select_broadcaster;
-		session_Configurations = new Configurations(selectedMatch, select_broadcaster);
+		tournament_Name = tournamentName;
+		session_Configurations = new Configurations(selectedMatch, select_broadcaster,tournamentName);
+			JAXBContext.newInstance(Configurations.class).createMarshaller().marshal(session_Configurations, 
+					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.CONFIGURATIONS_DIRECTORY + BadmintonUtil.LOGGER_XML));
 		
 		Match this_match = badmintonService.getMatch(Integer.valueOf(selectedMatch.toUpperCase()));
 		
@@ -114,6 +119,7 @@ public class IndexController
 		model.addAttribute("session_match", session_match);
 		model.addAttribute("session_socket", session_socket);
 		model.addAttribute("select_broadcaster", select_broadcaster);
+		model.addAttribute("tournamentName", tournamentName);
 		
 		return "logger";
 	}
@@ -251,7 +257,8 @@ public class IndexController
 			}
 			return JSONArray.fromObject(matches).toString();
 			
-		case BadmintonUtil.LOAD_MATCH: 
+		case BadmintonUtil.LOAD_MATCH:
+			session_match.setTournamentName(tournament_Name);
 			return JSONObject.fromObject(populateMatchVariables(session_match)).toString();
 			
 		case "ON-STRIKE_PLAYER":
@@ -268,14 +275,6 @@ public class IndexController
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + "_" +
 							session_match.getMatch().getGroupname() + "_"  + session_match.getMatch().getMatchnumber() + BadmintonUtil.XML));
 			return JSONObject.fromObject(session_match).toString();
-		
-		/*case "TOURNAMENT_NAME":
-			System.out.println(valueToProcess);
-			session_match.setTournamentName(valueToProcess);
-			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
-					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + "_" +
-							session_match.getMatch().getGroupname() + "_"  + session_match.getMatch().getMatchnumber() + BadmintonUtil.XML));
-			return JSONObject.fromObject(null).toString();*/
 			
 		default:
 			return JSONObject.fromObject(null).toString();

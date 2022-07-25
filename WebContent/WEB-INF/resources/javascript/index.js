@@ -17,7 +17,6 @@ function reloadPage(whichPage)
 	switch(whichPage){
 	case 'INITIALISE':
 		processUserSelection(document.getElementById('select_broadcaster'));
-		//processUserSelection(document.getElementById('tournamentName'));
 		processBadmintonProcedures('LOAD_MATCHES');
 		break;
 	case 'LOGGER':
@@ -308,15 +307,10 @@ function processUserSelection(whichInput)
 		switch ($('#select_broadcaster :selected').val().toUpperCase()) {
 		case 'DOAD_IN_HOUSE_EVEREST':
 			$('#vizPortNumber').attr('value','1980');
-			//$('#tournamentName').attr('value','GRAND PRIX BADMINTON LEAGUE - 2022');
 			$('label[for=vizScene], input#vizScene').hide();
 			break;
 		}
 		break;
-	
-	/*case 'tournamentName':
-		processBadmintonProcedures('TOURNAMENT_NAME');
-		break;*/
 		
 	case 'load_match_btn':
 		if(checkEmpty($('#vizIPAddress'),'IP Address Blank') == false) {
@@ -328,47 +322,46 @@ function processUserSelection(whichInput)
 	default:
 	
 		if($(whichInput).attr('id').includes('_btn') && $(whichInput).attr('id').split('_').length >= 4) {
-    		
-    		switch ($(whichInput).attr('id').split('_')[1]) {
-    		case 'increment':
-				
-				switch ($(whichInput).attr('id').split('_')[2]) {
-				case 'FW': case 'FE': case 'BW': case 'BE':
-	    			
-	    			$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-						parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
-					);
-	    			
-	    			break;
-				
-	    		case 'Points': 
-	    			if($('#golder_points_check_box').is(":checked")){
-						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
-							);
-	
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2
-							);
-						}
-						
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
-							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);
-						
-						document.getElementById("golder_points_check_box").checked = false;
-						
-						initialiseForm('golden_points',null);
-						
-						if($(whichInput).attr('id').split('_')[0] == 'home'){
-							initialiseForm('home_st',null);
+    		if(session_match.sets[session_match.sets.length - 1].status == 'START'){
+	    		switch ($(whichInput).attr('id').split('_')[1]) {
+	    		case 'increment':
+					
+					switch ($(whichInput).attr('id').split('_')[2]) {
+					case 'FW': case 'FE': case 'BW': case 'BE':
+		    			
+		    			$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
+						);
+		    			
+		    			break;
+					
+		    		case 'Points': 
+		    			if($('#golder_points_check_box').is(":checked")){
+							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
+								);
+		
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2
+								);
+							}
+							
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);
+							
+							document.getElementById("golder_points_check_box").checked = false;
+							
+							initialiseForm('golden_points',null);
+							
+							if($(whichInput).attr('id').split('_')[0] == 'home'){
+								initialiseForm('home_st',null);
+							}else{
+								initialiseForm('away_st',null);
+							}
+							
 						}else{
-							initialiseForm('away_st',null);
-						}
 						
-					}else{
-						
-						if(session_match.sets[session_match.sets.length - 1].status == 'START'){
 							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
 							
 								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
@@ -386,66 +379,63 @@ function processUserSelection(whichInput)
 								}
 							}
 						}
-						else{
-							alert(session_match.sets[session_match.sets.length - 1].status);
-							break;
-						}
-						
+		        		break;	
 					}
-	        		break;	
-				}
-				break;
-
-    		case 'decrement':
-    			
-    			switch ($(whichInput).attr('id').split('_')[2]) {
+					break;
+	
+	    		case 'decrement':
+	    			
+	    			switch ($(whichInput).attr('id').split('_')[2]) {
+						
+					case 'FW': case 'FE': case 'BW': case 'BE':
+						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+							parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
+							);
+						}
+		    			break;
 					
-				case 'FW': case 'FE': case 'BW': case 'BE':
-					if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
-						$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-						parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
-						);
-					}
-	    			break;
-				
-	    		case 'Points': 
-	    			if($('#golder_points_check_box').is(":checked")){
-						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 2
-							);
+		    		case 'Points': 
+		    			if($('#golder_points_check_box').is(":checked")){
+							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 2
+								);
+									
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 2
+								);
 								
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 2
-							);
-							
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) - 1);
-							
-							document.getElementById("golder_points_check_box").checked = false;
-						}
-
-					}else{
-						
-						if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
-							);
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) - 1);
 								
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 1
-							);
+								document.getElementById("golder_points_check_box").checked = false;
+							}
+	
+						}else{
+							
+							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
+								);
+									
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 1
+								);
+							}
 						}
-						
+		        		
+		        		break;	
 					}
-	        		
-	        		break;	
+					break;
+	
 				}
+				uploadFormDataToSessionObjects('SAVE_STATS');
 				break;
-
+			}else if(session_match.sets[session_match.sets.length - 1].status == 'END'){
+				alert('Next Set Not Started Yet');
+				break;
 			}
-			uploadFormDataToSessionObjects('SAVE_STATS');
-			break;
 		}	
 	}
 }
@@ -515,9 +505,6 @@ function processBadmintonProcedures(whatToProcess)
 		valueToProcess = $('#select_golden_points_player option:selected').val() ;
 		break;
 		
-	/*case 'TOURNAMENT_NAME':
-		valueToProcess = $('#tournamentName').val();
-		break;*/
 	}
 	
 	
@@ -980,7 +967,6 @@ function addItemsToList(whatToProcess, dataToProcess){
 		    				option.id = home_or_away + "_" + stats_type;
 		    				option.style = 'width:25%;text-align:center;';
 		    				dataToProcess.stats.forEach(function(item) {
-								//alert(item.statType + ',' + item.homeStatCount + ',' + item.awayStatCount);
 								if(option.name.toUpperCase().includes(item.statType.toUpperCase())) {
 									switch(j) {
 									case 0:
