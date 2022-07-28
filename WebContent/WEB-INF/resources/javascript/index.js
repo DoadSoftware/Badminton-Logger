@@ -1,4 +1,4 @@
-var Store=0,count=0,session_match;
+var session_match;
 function processWaitingButtonSpinner(whatToProcess) 
 {
 	switch (whatToProcess) {
@@ -27,9 +27,11 @@ function reloadPage(whichPage)
 function initialiseFormData(whatToProcess, dataToProcess,whichDataIndex){
 	switch (whatToProcess){
 		case 'REPOPULATE_DATABASE_DATA':
-		//alert(whichDataIndex);
+		alert(whichDataIndex);
+		alert('Home TeamTotalScore :'+ dataToProcess.sets[whichDataIndex-1].homeTeamTotalScore);
+		
 		if(dataToProcess.sets){
-			//alert('inside id loop:'+ whichDataIndex);
+			
 			$('#home_sets_count').val(dataToProcess.homeTeamSetsWon);
 			$('#away_sets_count').val(dataToProcess.awayTeamSetsWon);
 			
@@ -98,7 +100,37 @@ function initialiseForm(whatToProcess, dataToProcess)
 {
 	switch (whatToProcess){
 	
-	case 'REPOPULATE_DATABASE_DATA':
+	case 'START_SET':
+		document.getElementById('start_end_set_summary').innerHTML = 'SET' + dataToProcess.sets[dataToProcess.sets.length-1].setNumber + ': ' + 
+			 dataToProcess.sets[dataToProcess.sets.length-1].status ;
+		break;
+	case 'END_SET': case 'RESET_SET':
+		document.getElementById('start_end_set_summary').innerHTML = 'SET' + dataToProcess.sets[dataToProcess.sets.length-1].setNumber + ': ' + 
+			 dataToProcess.sets[dataToProcess.sets.length-1].status ;
+			 
+		for(var i=1; i <= dataToProcess.sets.length;i++){
+			if(i==1){
+				document.getElementById('match_set_summary').innerHTML = 'SET: ' + dataToProcess.sets[dataToProcess.sets.length-i].homeTeamTotalScore + '-' +
+					dataToProcess.sets[dataToProcess.sets.length-i].awayTeamTotalScore ;
+			}
+			else if(i==2){
+				a=i-1;
+				document.getElementById('match_set_summary').innerHTML = 'SET' + dataToProcess.sets[dataToProcess.sets.length-i].homeTeamTotalScore + '-' +
+					dataToProcess.sets[dataToProcess.sets.length-i].awayTeamTotalScore + ' , ' + dataToProcess.sets[dataToProcess.sets.length-a].homeTeamTotalScore + '-' +
+					dataToProcess.sets[dataToProcess.sets.length-a].awayTeamTotalScore ;
+				
+			}else if(i==3){
+				a=i-1;
+				b=i-2;
+				document.getElementById('match_set_summary').innerHTML = 'SET' + dataToProcess.sets[dataToProcess.sets.length-i].homeTeamTotalScore + '-' +
+					dataToProcess.sets[dataToProcess.sets.length-i].awayTeamTotalScore + ' , ' + dataToProcess.sets[dataToProcess.sets.length-a].homeTeamTotalScore + '-' +
+					dataToProcess.sets[dataToProcess.sets.length-a].awayTeamTotalScore + ' , ' + dataToProcess.sets[dataToProcess.sets.length-b].homeTeamTotalScore + '-' +
+					dataToProcess.sets[dataToProcess.sets.length-b].awayTeamTotalScore ;
+			}
+		}
+		break;
+	
+	/*case 'REPOPULATE_DATABASE_DATA':
 		
 		if(dataToProcess.sets){
 			$('#home_sets_count').val(dataToProcess.homeTeamSetsWon);
@@ -162,23 +194,7 @@ function initialiseForm(whatToProcess, dataToProcess)
 			}
 		}
 		
-		break;
-	
-	case 'Points':
-		if(dataToProcess.match.categoryId == 0){
-			switch(dataToProcess.match.superMatch){
-				case 1:
-					count = 100;
-					break;
-			}
-		}else{
-			switch(dataToProcess.match.categoryId){
-				case 1: case 2: case 3: case 4:
-					count = parseInt(dataToProcess.match.numberOfPoints);
-					break;
-			}
-		}	
-		break;
+		break;*/
 	
 	case 'golden_points':
 		document.getElementById('select_golden_points_player').selectedIndex = 0 ;
@@ -277,25 +293,11 @@ function processUserSelection(whichInput)
 		break;
 		
 	case 'start_set': 
-		Store = Store + 1 ;
 		if(confirm('Starting set with ' + $('#select_onstrike_player option:selected').text() + ' on Serve') == false) {
 			return false;
 		}
-		switch(Store){
-			case 1:
-				document.getElementById('start_end_set_summary').innerHTML = 'SET1: START' ;
-				break;
-			case 2:
-				document.getElementById('start_end_set_summary').innerHTML = 'SET2: START' ;
-				break;
-			case 3:
-				document.getElementById('start_end_set_summary').innerHTML = 'SET3: START' ;
-				break;
-		}
-		
 		
 		uploadFormDataToSessionObjects('START_SET');
-		processBadmintonProcedures('POINTS_COUNT');
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',false);
 		$('#logging_stats_div').find("input").prop('disabled',false);
 		initialiseForm('RESET_SET_STATS',null);
@@ -315,23 +317,7 @@ function processUserSelection(whichInput)
 			}
 			$('#away_sets_count').val(parseInt($('#away_sets_count').val()) + 1);
 		}
-		switch(Store){
-			case 1:
-				document.getElementById('start_end_set_summary').innerHTML = 'SET1: END' ;
-				document.getElementById('match_set_summary').innerHTML = 'SET: ' + parseInt($('#home_scores_count').val()) + '-' 
-					+ parseInt($('#away_scores_count').val());
-				break;
-			case 2:
-				document.getElementById('start_end_set_summary').innerHTML = 'SET2: END' ;
-				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
-				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
-				break;
-			case 3:
-				document.getElementById('start_end_set_summary').innerHTML = 'SET3: END' ;
-				document.getElementById('match_set_summary').innerHTML = document.getElementById('match_set_summary').innerHTML + ' , ' +
-				parseInt($('#home_scores_count').val()) + '-' + parseInt($('#away_scores_count').val());
-				break;
-		}
+		
 		uploadFormDataToSessionObjects('END_SET')
 		initialiseForm('RESET_SET_STATS',null);
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
@@ -345,17 +331,7 @@ function processUserSelection(whichInput)
 		}
 		initialiseForm('RESET_SET_STATS',null);
 		uploadFormDataToSessionObjects('RESET_SET');
-		switch(Store){
-			case 1:
-				Store = 0;
-				break;
-			case 2:
-				Store = 1;
-				break;
-			case 3:
-				Store = 2;
-				break;
-		}
+		
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
 		break;
@@ -370,7 +346,6 @@ function processUserSelection(whichInput)
 		document.getElementById('match_summary').innerHTML = 'Before start set first select the player who serve';
 		document.getElementById('match_set_summary').innerHTML = " ";
 		document.getElementById('start_end_set_summary').innerHTML = " ";
-		Store = 0;
 		
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 		$('#logging_stats_div').find("input").prop('disabled',true);
@@ -396,6 +371,7 @@ function processUserSelection(whichInput)
 	default:
 	
 		if($(whichInput).attr('id').includes('_btn') && $(whichInput).attr('id').split('_').length >= 4) {
+			//alert(session_match.sets.length);
     		if(session_match.sets[session_match.sets.length - 1].status == 'START'){
 	    		switch ($(whichInput).attr('id').split('_')[1]) {
 	    		case 'increment':
@@ -411,7 +387,8 @@ function processUserSelection(whichInput)
 					
 		    		case 'Points':
 		    			if(parseInt($('#select_golden_points_player').val()) == 0){
-							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
+							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < 
+								parseInt(session_match.match.numberOfPoints)){
 							
 								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
 									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 1
@@ -429,7 +406,8 @@ function processUserSelection(whichInput)
 							}
 						} else {
 							
-							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
+							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < 
+								parseInt(session_match.match.numberOfPoints)){
 								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
 									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
 								);
@@ -547,7 +525,13 @@ function uploadFormDataToSessionObjects(whatToProcess)
 			session_match = response;
 			
         	switch(whatToProcess.toUpperCase()) {
-        	case 'SAVE_STATS':
+        	case 'SAVE_STATS': 
+        		break;
+        	case 'START_SET':
+        		initialiseForm(whatToProcess,response);
+        		break;
+        	case 'END_SET': case 'RESET_SET':
+        		initialiseForm(whatToProcess,response);
         		break;
         	}
         	
@@ -583,14 +567,14 @@ function processBadmintonProcedures(whatToProcess)
         url : 'processBadmintonProcedures.html',     
         data : 'whatToProcess=' + whatToProcess + '&valueToProcess=' + valueToProcess, 
         dataType : 'json',
-        success : function(data) {
+        success : function(data) { 
         	switch(whatToProcess) {
 			case 'READ-DATABASE-AND-POPULATE':
 				if(data){
 					if($('#database_file_timestamp').val() != data.database_file_timestamp) {
 						document.getElementById('database_file_timestamp').value = data.database_file_timestamp;
 						//initialiseForm('REPOPULATE_DATABASE_DATA',data)
-						initialiseFormData('REPOPULATE_DATABASE_DATA',data,parseInt($('#select_set_value option:selected').val()));
+						initialiseFormData('REPOPULATE_DATABASE_DATA',data,data.sets[data.sets.length-1].setNumber);
 					}
 				}
 				break;
@@ -598,13 +582,11 @@ function processBadmintonProcedures(whatToProcess)
 				initialiseFormData('REPOPULATE_DATABASE_DATA',data,parseInt($('#select_set_value option:selected').val()));
 				break;
 				
-			case 'POINTS_COUNT':
-				initialiseForm('Points',data);
-				break;
 			case 'LOAD_MATCHES': case 'LOAD_MATCH':
 				addItemsToList(whatToProcess,data)
 	        	switch(whatToProcess) {
 				case 'LOAD_MATCH':
+					session_match = data;
 					$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
 					$('#logging_stats_div').find("input").prop('disabled',true);
 					break;
@@ -857,8 +839,8 @@ function addItemsToList(whatToProcess, dataToProcess){
 			list_option.value = set.setNumber;
 			list_option.text = 'SET' + set.setNumber;
 			option.append(list_option);
+			
 		});
-	    
 	    option.setAttribute('onchange','processUserSelection(this);');
 	    
 		text = document.createElement('label');

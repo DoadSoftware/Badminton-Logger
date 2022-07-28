@@ -36,7 +36,7 @@ public List<Match> getAllMatches() {
 
 @Override
 public Match getMatch(int matchID) {
-	return (Match) sessionFactory.getCurrentSession().createQuery("from Match WHERE matchId = " + String.valueOf(matchID)).uniqueResult();
+	return (Match) sessionFactory.getCurrentSession().createQuery("from Match WHERE matchId = " + String.valueOf(matchID) + " ORDER BY matchId ASC").uniqueResult();
 }
 
 }

@@ -228,9 +228,9 @@ public class IndexController
 	{	
 
 		switch (whatToProcess.toUpperCase()) {
-		case "POINTS_COUNT":
+		case "SET_VALUE":
 			return JSONObject.fromObject(session_match).toString();
-			
+		
 		case "READ-DATABASE-AND-POPULATE":
 			if(!valueToProcess.equalsIgnoreCase(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + BadmintonUtil.DATABASE_FILE).lastModified())))
