@@ -24,6 +24,76 @@ function reloadPage(whichPage)
 		break;
 	}
 }
+function initialiseFormData(whatToProcess, dataToProcess,whichDataIndex){
+	switch (whatToProcess){
+		case 'REPOPULATE_DATABASE_DATA':
+		//alert(whichDataIndex);
+		if(dataToProcess.sets){
+			//alert('inside id loop:'+ whichDataIndex);
+			$('#home_sets_count').val(dataToProcess.homeTeamSetsWon);
+			$('#away_sets_count').val(dataToProcess.awayTeamSetsWon);
+			
+			$('#home_scores_count').val(dataToProcess.sets[whichDataIndex-1].homeTeamTotalScore);
+			$('#away_scores_count').val(dataToProcess.sets[whichDataIndex-1].awayTeamTotalScore);
+			
+			$('#home_Points').val(dataToProcess.sets[whichDataIndex-1].homeTeamTotalScore);
+			$('#home_FW').val(dataToProcess.sets[whichDataIndex-1].stats[1].homeStatCount);
+			$('#home_FE').val(dataToProcess.sets[whichDataIndex-1].stats[2].homeStatCount);
+			$('#home_BW').val(dataToProcess.sets[whichDataIndex-1].stats[3].homeStatCount);
+			$('#home_BE').val(dataToProcess.sets[whichDataIndex-1].stats[4].homeStatCount);
+			$('#home_golden').val(dataToProcess.sets[whichDataIndex-1].stats[5].homeStatCount);
+			
+			$('#away_Points').val(dataToProcess.sets[whichDataIndex-1].awayTeamTotalScore);
+			$('#away_FW').val(dataToProcess.sets[whichDataIndex-1].stats[1].awayStatCount);
+			$('#away_FE').val(dataToProcess.sets[whichDataIndex-1].stats[2].awayStatCount);
+			$('#away_BW').val(dataToProcess.sets[whichDataIndex-1].stats[3].awayStatCount);
+			$('#away_BE').val(dataToProcess.sets[whichDataIndex-1].stats[4].awayStatCount);
+			$('#away_golden').val(dataToProcess.sets[whichDataIndex-1].stats[5].awayStatCount);
+		}
+		
+		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
+			if(i==1){
+				$('#select_home_player').text(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + '\n' + 
+					'('+ dataToProcess.match.homeTeam.fullname + ')');
+			}
+			else if(i==2){
+				a=i-1;
+				$('#select_home_player').text(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "/" +
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name + '\n' + 
+					'('+ dataToProcess.match.homeTeam.fullname + ')');
+			}else if(i==3){
+				a=i-1;
+				b=i-2;
+				$('#select_home_player').text(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
+					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name + '\n' + 
+					'('+ dataToProcess.match.homeTeam.fullname + ')');
+			}
+		}
+		
+		for(var i=1; i <= dataToProcess.match.awayPlayers.length;i++){
+			if(i==1){
+				$('#select_away_player').text(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + '\n' + 
+					'('+ dataToProcess.match.awayTeam.fullname + ')');
+			}
+			else if(i==2){
+				a=i-1;
+				$('#select_away_player').text(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "/" +
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name + '\n' + 
+					'('+ dataToProcess.match.awayTeam.fullname + ')');
+			}else if(i==3){
+				a=i-1;
+				b=i-2;
+				$('#select_away_player').text(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
+					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name + '\n' + 
+					'('+ dataToProcess.match.awayTeam.fullname + ')');
+			}
+		}
+		
+		break;
+	}
+}
 function initialiseForm(whatToProcess, dataToProcess)
 {
 	switch (whatToProcess){
@@ -193,6 +263,10 @@ function processUserSelection(whichInput)
 {	
 	switch ($(whichInput).attr('id')) {
 	
+	case 'select_set_value':
+		processBadmintonProcedures('SET_VALUE');
+		break;
+	
 	case 'select_onstrike_player':
 		processBadmintonProcedures('ON-STRIKE_PLAYER');
 		initialiseForm('on_Strike',null);
@@ -335,33 +409,8 @@ function processUserSelection(whichInput)
 		    			
 		    			break;
 					
-		    		case 'Points': 
-		    			if($('#golder_points_check_box').is(":checked")){
-							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
-								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
-								);
-		
-								$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2
-								);
-							}
-							
-							$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
-								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);
-							
-							document.getElementById("golder_points_check_box").checked = false;
-							
-							initialiseForm('golden_points',null);
-							
-							if($(whichInput).attr('id').split('_')[0] == 'home'){
-								initialiseForm('home_st',null);
-							}else{
-								initialiseForm('away_st',null);
-							}
-							
-						}else{
-						
+		    		case 'Points':
+		    			if(parseInt($('#select_golden_points_player').val()) == 0){
 							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
 							
 								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
@@ -378,7 +427,31 @@ function processUserSelection(whichInput)
 									initialiseForm('away_st',null);
 								}
 							}
+						} else {
+							
+							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val() < count){
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) + 2
+								);
+		
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) + 2
+								);
+							}
+							
+							$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
+								parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) + 1);
+							
+							
+							initialiseForm('golden_points',null);
+							
+							if($(whichInput).attr('id').split('_')[0] == 'home'){
+								initialiseForm('home_st',null);
+							}else{
+								initialiseForm('away_st',null);
+							}
 						}
+	
 		        		break;	
 					}
 					break;
@@ -395,8 +468,19 @@ function processUserSelection(whichInput)
 						}
 		    			break;
 					
-		    		case 'Points': 
-		    			if($('#golder_points_check_box').is(":checked")){
+		    		case 'Points':
+		    			if(parseInt($('#select_golden_points_player').val()) == 0){
+							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
+								);
+									
+								$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
+									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 1
+								);
+							}
+							
+						} else {
 							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
 								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
 									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 2
@@ -408,23 +492,9 @@ function processUserSelection(whichInput)
 								
 								$('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val(
 									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_golden').val()) - 1);
-								
-								document.getElementById("golder_points_check_box").checked = false;
-							}
-	
-						}else{
-							
-							if($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()>0){
-								$('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val(
-									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_' + $(whichInput).attr('id').split('_')[2]).val()) - 1
-								);
-									
-								$('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val(
-									parseInt($('#' + $(whichInput).attr('id').split('_')[0] + '_scores_count').val()) - 1
-								);
 							}
 						}
-		        		
+		    			
 		        		break;	
 					}
 					break;
@@ -519,10 +589,15 @@ function processBadmintonProcedures(whatToProcess)
 				if(data){
 					if($('#database_file_timestamp').val() != data.database_file_timestamp) {
 						document.getElementById('database_file_timestamp').value = data.database_file_timestamp;
-						initialiseForm('REPOPULATE_DATABASE_DATA',data)
+						//initialiseForm('REPOPULATE_DATABASE_DATA',data)
+						initialiseFormData('REPOPULATE_DATABASE_DATA',data,parseInt($('#select_set_value option:selected').val()));
 					}
 				}
 				break;
+			case 'SET_VALUE':
+				initialiseFormData('REPOPULATE_DATABASE_DATA',data,parseInt($('#select_set_value option:selected').val()));
+				break;
+				
 			case 'POINTS_COUNT':
 				initialiseForm('Points',data);
 				break;
@@ -769,20 +844,28 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option.appendChild(list_option);
 		
 		text = document.createElement('label');
-		text.innerHTML = 'Choose who select Golden Points: '
+		text.innerHTML = 'Choose who call the Golden Points: '
 		text.htmlFor = option.id;
-		text.style = 'width:250px;';
+		text.style = 'width:500px;margin-top:1%;';
 		document.getElementById('logging_stats_div').appendChild(text).appendChild(option);
 		
-		checkbox_option = document.createElement('input');
-		checkbox_option.id = "golder_points_check_box";
-		checkbox_option.type = "checkbox";
+		option = document.createElement('select');
+		option.id = 'select_set_value';
 		
-		label = document.createElement('label')
-		label.htmlFor = checkbox_option.id;
-		label.style = 'width:200px;margin-top:2%;';
-		label.appendChild(document.createTextNode('Golden Points '));
-		document.getElementById('logging_stats_div').appendChild(label).appendChild(checkbox_option);
+		dataToProcess.sets.forEach(function(set,index,array){
+			list_option = document.createElement('option');
+			list_option.value = set.setNumber;
+			list_option.text = 'SET' + set.setNumber;
+			option.append(list_option);
+		});
+	    
+	    option.setAttribute('onchange','processUserSelection(this);');
+	    
+		text = document.createElement('label');
+		text.innerHTML = 'Previous Set: '
+		text.htmlFor = option.id;
+		text.style = 'width:500px;margin-top:1%;';
+		document.getElementById('logging_stats_div').appendChild(text).appendChild(option);
 		
 		table = document.createElement('table');
 		table.setAttribute('class', 'table table-bordered');

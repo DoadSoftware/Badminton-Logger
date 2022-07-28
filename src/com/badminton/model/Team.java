@@ -33,6 +33,9 @@ public class Team {
   
   @Column(name = "TEAMCOLOR")
   private String teamcolor;
+  
+  @Column(name = "RGB")
+  private String rgb;
 
 public int getTeamId() {
 	return teamId;
@@ -96,6 +99,14 @@ public String getTeamcolor() {
 
 public void setTeamcolor(String teamcolor) {
 	this.teamcolor = teamcolor;
+}
+
+public String getRgb() {
+	return rgb;
+}
+
+public void setRgb(String rgb) {
+	this.rgb = rgb;
 }
 
 @Override

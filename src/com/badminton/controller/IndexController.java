@@ -243,6 +243,7 @@ public class IndexController
 				
 				session_match.setDatabase_file_timestamp(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(
 						new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.DATABASE_DIRECTORY + BadmintonUtil.DATABASE_FILE).lastModified()));
+				
 				return JSONObject.fromObject(session_match).toString();
 			}
 			else {
