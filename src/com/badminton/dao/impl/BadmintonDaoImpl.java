@@ -31,12 +31,12 @@ public Team getTeam(int team_id) {
 
 @Override
 public List<Match> getAllMatches() {
-	return sessionFactory.getCurrentSession().createQuery("from Match").list();
+	return sessionFactory.getCurrentSession().createQuery("from Match ORDER BY matchId ASC").list();
 }
 
 @Override
 public Match getMatch(int matchID) {
-	return (Match) sessionFactory.getCurrentSession().createQuery("from Match WHERE matchId = " + String.valueOf(matchID) + " ORDER BY matchId ASC").uniqueResult();
+	return (Match) sessionFactory.getCurrentSession().createQuery("from Match WHERE matchId=" + String.valueOf(matchID)).uniqueResult();
 }
 
 }

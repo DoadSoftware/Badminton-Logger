@@ -169,7 +169,23 @@ public class IndexController
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + selectedMatch + "_" + 
 							session_match.getMatch().getGroupname() + "_" + session_match.getMatch().getMatchnumber() + BadmintonUtil.XML));
 			
-		}else if (request.getRequestURI().contains("start_set")) {
+		} else if (request.getRequestURI().contains("edit_set")) {
+			
+			for (Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+				if(entry.getKey().contains("select_set_value")) { 
+					for(Set set : session_match.getSets()) {
+						if(Integer.valueOf(entry.getValue()[0]) == set.getSetNumber()) 
+							set.setStatus(BadmintonUtil.START);
+						else
+							set.setStatus(BadmintonUtil.END);
+					}
+				}
+	   		}
+			
+			session_match.getSets().add(new Set(session_match.getSets().size() + 1, BadmintonUtil.START, 
+					session_match.getMatch().getHomePlayers(), session_match.getMatch().getAwayPlayers(), session_match.getStats()));
+
+		} else if (request.getRequestURI().contains("start_set")) {
 			
 			if(session_match.getSets() == null || session_match.getSets().size() <= 0) {
 				session_match.setSets(new ArrayList<Set>());
@@ -195,15 +211,23 @@ public class IndexController
 							if(entry.getKey().toUpperCase().contains(stat.getStatType())) {
 								stat.setHomeStatCount(Integer.valueOf(entry.getValue()[0]));
 							} else if (entry.getKey().toUpperCase().contains(BadmintonUtil.SCORES)) {
-								if(session_match.getSets() != null && session_match.getSets().size() > 0) 
-									session_match.getSets().get(session_match.getSets().size() - 1).setHomeTeamTotalScore(Integer.valueOf(entry.getValue()[0]));
+								if(session_match.getSets() != null && session_match.getSets().size() > 0) {
+									for(Set set : session_match.getSets()) {
+										if(set.getStatus().equalsIgnoreCase(BadmintonUtil.START)) {
+											set.setHomeTeamTotalScore(Integer.valueOf(entry.getValue()[0]));
+										}
+									}
+								}
 							}
 						} else if(entry.getKey().toUpperCase().contains(BadmintonUtil.AWAY)) {
 							if(entry.getKey().toUpperCase().contains(stat.getStatType())) {
 								stat.setAwayStatCount(Integer.valueOf(entry.getValue()[0]));
 							} else if (entry.getKey().toUpperCase().contains(BadmintonUtil.SCORES)) {
-								if(session_match.getSets() != null && session_match.getSets().size() > 0) 
-									session_match.getSets().get(session_match.getSets().size() - 1).setAwayTeamTotalScore(Integer.valueOf(entry.getValue()[0]));
+								for(Set set : session_match.getSets()) {
+									if(set.getStatus().equalsIgnoreCase(BadmintonUtil.START)) {
+										set.setAwayTeamTotalScore(Integer.valueOf(entry.getValue()[0]));
+									}
+								}
 							}
 						}
 					}
@@ -211,7 +235,11 @@ public class IndexController
 	   		}
 			session_match.setStats(this_stats);
 			if(session_match.getSets() != null && session_match.getSets().size() > 0) {
-				session_match.getSets().get(session_match.getSets().size() - 1).setStats(this_stats);
+				for(Set set : session_match.getSets()) {
+					if(set.getStatus().equalsIgnoreCase(BadmintonUtil.START)) {
+						set.setStats(this_stats);
+					}
+				}
 			}
 			JAXBContext.newInstance(BadmintonMatch.class).createMarshaller().marshal(session_match, 
 					new File(BadmintonUtil.BADMINTON_DIRECTORY + BadmintonUtil.MATCHES_DIRECTORY + session_match.getMatch().getMatchId() + "_" +

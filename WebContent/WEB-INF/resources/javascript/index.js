@@ -25,11 +25,10 @@ function reloadPage(whichPage)
 	}
 }
 function initialiseFormData(whatToProcess, dataToProcess,whichDataIndex){
+	
 	switch (whatToProcess){
-		case 'REPOPULATE_DATABASE_DATA':
-		alert(whichDataIndex);
-		alert('Home TeamTotalScore :'+ dataToProcess.sets[whichDataIndex-1].homeTeamTotalScore);
-		
+	case 'REPOPULATE_DATABASE_DATA':
+	
 		if(dataToProcess.sets){
 			
 			$('#home_sets_count').val(dataToProcess.homeTeamSetsWon);
@@ -51,6 +50,9 @@ function initialiseFormData(whatToProcess, dataToProcess,whichDataIndex){
 			$('#away_BW').val(dataToProcess.sets[whichDataIndex-1].stats[3].awayStatCount);
 			$('#away_BE').val(dataToProcess.sets[whichDataIndex-1].stats[4].awayStatCount);
 			$('#away_golden').val(dataToProcess.sets[whichDataIndex-1].stats[5].awayStatCount);
+			
+			document.getElementById('select_set_value').selectedIndex = whichDataIndex;
+			
 		}
 		
 		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
@@ -98,12 +100,29 @@ function initialiseFormData(whatToProcess, dataToProcess,whichDataIndex){
 }
 function initialiseForm(whatToProcess, dataToProcess)
 {
-	switch (whatToProcess){
+	var option,list_option;
 	
+	switch (whatToProcess){
 	case 'START_SET':
-		document.getElementById('start_end_set_summary').innerHTML = 'SET' + dataToProcess.sets[dataToProcess.sets.length-1].setNumber + ': ' + 
+		
+		document.getElementById('start_end_set_summary').innerHTML = 'SET ' + dataToProcess.sets[dataToProcess.sets.length-1].setNumber + ': ' + 
 			 dataToProcess.sets[dataToProcess.sets.length-1].status ;
+		
+		$('#select_set_value').empty();
+		option = document.getElementById('select_set_value');
+		
+		list_option = document.createElement('option');
+		list_option.text = '';
+		option.append(list_option);
+		dataToProcess.sets.forEach(function(set,index,array){
+			list_option = document.createElement('option');
+			list_option.value = set.setNumber;
+			list_option.text = 'SET' + set.setNumber;
+			option.append(list_option);
+		});
+				
 		break;
+		
 	case 'END_SET': case 'RESET_SET':
 		document.getElementById('start_end_set_summary').innerHTML = 'SET' + dataToProcess.sets[dataToProcess.sets.length-1].setNumber + ': ' + 
 			 dataToProcess.sets[dataToProcess.sets.length-1].status ;
@@ -291,8 +310,26 @@ function processUserSelection(whichInput)
 	case 'select_golden_points_player':
 		processBadmintonProcedures('GOLDEN-POINTS_PLAYER');
 		break;
+	
+	case 'edit_set':
+		
+		if(document.getElementById('select_set_value').value <= 0) {
+			alert('You must select PREVIOUS SET before using the EDIT button');
+			return false;
+		}
+		
+		if(confirm('You are about to edit ' + $('#select_set_count option:selected').text()) == false) {
+			return false;
+		}
+
+		uploadFormDataToSessionObjects('EDIT_SET');
+		$('#logging_stats_table_body').find("button, select, input").prop('disabled',false);
+		$('#logging_stats_div').find("input").prop('disabled',false);
+		
+		break;
 		
 	case 'start_set': 
+	
 		if(confirm('Starting set with ' + $('#select_onstrike_player option:selected').text() + ' on Serve') == false) {
 			return false;
 		}
@@ -501,7 +538,7 @@ function uploadFormDataToSessionObjects(whatToProcess)
 			}
 		);
 		break;
-	case 'START_SET': case 'END_SET': case 'RESET_SET': case 'RESET_ALL':
+	case 'START_SET': case 'END_SET': case 'RESET_SET': case 'RESET_ALL': case 'EDIT_SET':
 		url_path = whatToProcess.toLowerCase();
 		switch(whatToProcess.toUpperCase()) {
 		case 'END_SET':
@@ -654,9 +691,15 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option.setAttribute('onclick','processUserSelection(this);');
 		div.appendChild(option);
 
+		option = document.createElement('button');
+		option.innerHTML = 'Edit Set';
+		option.id = 'edit_set';
+		option.style = 'width:130px;';
+		option.setAttribute('onclick','processUserSelection(this);');
+		div.appendChild(option);
+
 		document.getElementById('logging_stats_div').appendChild(div);
-		
-       
+	   
         for(var i=1; i<=2; i++) {
 	   		div = document.createElement('div');
 			div.style = 'text-align:center;';
@@ -834,10 +877,13 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option = document.createElement('select');
 		option.id = 'select_set_value';
 		
+		list_option = document.createElement('option');
+		list_option.text = '';
+		option.append(list_option);
 		dataToProcess.sets.forEach(function(set,index,array){
 			list_option = document.createElement('option');
 			list_option.value = set.setNumber;
-			list_option.text = 'SET' + set.setNumber;
+			list_option.text = 'SET ' + set.setNumber;
 			option.append(list_option);
 			
 		});
