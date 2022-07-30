@@ -311,6 +311,12 @@ function processUserSelection(whichInput)
 		processBadmintonProcedures('GOLDEN-POINTS_PLAYER');
 		break;
 	
+	case 'end_edit_set':
+
+		$('#select_set_value').prop('disabled',false);
+		uploadFormDataToSessionObjects('END_EDIT_SET');
+		break;
+		
 	case 'edit_set':
 		
 		if(document.getElementById('select_set_value').value <= 0) {
@@ -321,10 +327,11 @@ function processUserSelection(whichInput)
 		if(confirm('You are about to edit ' + $('#select_set_count option:selected').text()) == false) {
 			return false;
 		}
-
+		
 		uploadFormDataToSessionObjects('EDIT_SET');
 		$('#logging_stats_table_body').find("button, select, input").prop('disabled',false);
 		$('#logging_stats_div').find("input").prop('disabled',false);
+		$('#select_set_value').prop('disabled',true);
 		
 		break;
 		
@@ -538,9 +545,12 @@ function uploadFormDataToSessionObjects(whatToProcess)
 			}
 		);
 		break;
-	case 'START_SET': case 'END_SET': case 'RESET_SET': case 'RESET_ALL': case 'EDIT_SET':
+	case 'START_SET': case 'END_SET': case 'RESET_SET': case 'RESET_ALL': case 'EDIT_SET': case 'END_EDIT_SET':
 		url_path = whatToProcess.toLowerCase();
 		switch(whatToProcess.toUpperCase()) {
+		case 'EDIT_SET': case 'END_EDIT_SET':
+			formData.append('select_set_value',document.getElementById('select_set_value').value);  
+			break; 
 		case 'END_SET':
 			formData.append('home_sets_count',document.getElementById('home_sets_count').value);  
 			formData.append('away_sets_count',document.getElementById('away_sets_count').value);  
@@ -694,6 +704,13 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option = document.createElement('button');
 		option.innerHTML = 'Edit Set';
 		option.id = 'edit_set';
+		option.style = 'width:130px;';
+		option.setAttribute('onclick','processUserSelection(this);');
+		div.appendChild(option);
+
+		option = document.createElement('button');
+		option.innerHTML = 'End Edit';
+		option.id = 'end_edit_set';
 		option.style = 'width:130px;';
 		option.setAttribute('onclick','processUserSelection(this);');
 		div.appendChild(option);
