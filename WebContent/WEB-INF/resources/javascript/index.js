@@ -55,46 +55,6 @@ function initialiseFormData(whatToProcess, dataToProcess,whichDataIndex){
 			
 		}
 		
-		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
-			if(i==1){
-				$('#select_home_player').text(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + '\n' + 
-					'('+ dataToProcess.match.homeTeam.fullname + ')');
-			}
-			else if(i==2){
-				a=i-1;
-				$('#select_home_player').text(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name + "/" +
-					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name + '\n' + 
-					'('+ dataToProcess.match.homeTeam.fullname + ')');
-			}else if(i==3){
-				a=i-1;
-				b=i-2;
-				$('#select_home_player').text(dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-i].full_name +'/'+
-					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-a].full_name +'/'+
-					dataToProcess.match.homePlayers[dataToProcess.match.homePlayers.length-b].full_name + '\n' + 
-					'('+ dataToProcess.match.homeTeam.fullname + ')');
-			}
-		}
-		
-		for(var i=1; i <= dataToProcess.match.awayPlayers.length;i++){
-			if(i==1){
-				$('#select_away_player').text(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + '\n' + 
-					'('+ dataToProcess.match.awayTeam.fullname + ')');
-			}
-			else if(i==2){
-				a=i-1;
-				$('#select_away_player').text(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name + "/" +
-					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name + '\n' + 
-					'('+ dataToProcess.match.awayTeam.fullname + ')');
-			}else if(i==3){
-				a=i-1;
-				b=i-2;
-				$('#select_away_player').text(dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-i].full_name +'/'+
-					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-a].full_name +'/'+
-					dataToProcess.match.awayPlayers[dataToProcess.match.awayPlayers.length-b].full_name + '\n' + 
-					'('+ dataToProcess.match.awayTeam.fullname + ')');
-			}
-		}
-		
 		break;
 	}
 }
@@ -122,9 +82,14 @@ function initialiseForm(whatToProcess, dataToProcess)
 		});
 				
 		break;
+	
+	case 'EDIT_SET': case 'END_EDIT_SET':
+		ocument.getElementById('start_end_set_summary').innerHTML = 'SET ' + dataToProcess.sets[dataToProcess.sets.length-1].setNumber + ': ' + 
+			 dataToProcess.sets[dataToProcess.sets.length-1].status ;
+		break;
 		
-	case 'END_SET': case 'RESET_SET':
-		document.getElementById('start_end_set_summary').innerHTML = 'SET' + dataToProcess.sets[dataToProcess.sets.length-1].setNumber + ': ' + 
+	case 'END_SET': case 'RESET_SET': case 'END_EDIT_SET':
+		document.getElementById('start_end_set_summary').innerHTML = 'SET ' + dataToProcess.sets[dataToProcess.sets.length-1].setNumber + ': ' + 
 			 dataToProcess.sets[dataToProcess.sets.length-1].status ;
 			 
 		for(var i=1; i <= dataToProcess.sets.length;i++){
@@ -134,14 +99,14 @@ function initialiseForm(whatToProcess, dataToProcess)
 			}
 			else if(i==2){
 				a=i-1;
-				document.getElementById('match_set_summary').innerHTML = 'SET' + dataToProcess.sets[dataToProcess.sets.length-i].homeTeamTotalScore + '-' +
+				document.getElementById('match_set_summary').innerHTML = 'SET: ' + dataToProcess.sets[dataToProcess.sets.length-i].homeTeamTotalScore + '-' +
 					dataToProcess.sets[dataToProcess.sets.length-i].awayTeamTotalScore + ' , ' + dataToProcess.sets[dataToProcess.sets.length-a].homeTeamTotalScore + '-' +
 					dataToProcess.sets[dataToProcess.sets.length-a].awayTeamTotalScore ;
 				
 			}else if(i==3){
 				a=i-1;
 				b=i-2;
-				document.getElementById('match_set_summary').innerHTML = 'SET' + dataToProcess.sets[dataToProcess.sets.length-i].homeTeamTotalScore + '-' +
+				document.getElementById('match_set_summary').innerHTML = 'SET: ' + dataToProcess.sets[dataToProcess.sets.length-i].homeTeamTotalScore + '-' +
 					dataToProcess.sets[dataToProcess.sets.length-i].awayTeamTotalScore + ' , ' + dataToProcess.sets[dataToProcess.sets.length-a].homeTeamTotalScore + '-' +
 					dataToProcess.sets[dataToProcess.sets.length-a].awayTeamTotalScore + ' , ' + dataToProcess.sets[dataToProcess.sets.length-b].homeTeamTotalScore + '-' +
 					dataToProcess.sets[dataToProcess.sets.length-b].awayTeamTotalScore ;
@@ -149,29 +114,7 @@ function initialiseForm(whatToProcess, dataToProcess)
 		}
 		break;
 	
-	/*case 'REPOPULATE_DATABASE_DATA':
-		
-		if(dataToProcess.sets){
-			$('#home_sets_count').val(dataToProcess.homeTeamSetsWon);
-			$('#away_sets_count').val(dataToProcess.awayTeamSetsWon);
-			
-			$('#home_scores_count').val(dataToProcess.sets[dataToProcess.sets.length-1].homeTeamTotalScore);
-			$('#away_scores_count').val(dataToProcess.sets[dataToProcess.sets.length-1].awayTeamTotalScore);
-			
-			$('#home_Points').val(dataToProcess.sets[dataToProcess.sets.length-1].homeTeamTotalScore);
-			$('#home_FW').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[1].homeStatCount);
-			$('#home_FE').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[2].homeStatCount);
-			$('#home_BW').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[3].homeStatCount);
-			$('#home_BE').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[4].homeStatCount);
-			$('#home_golden').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[5].homeStatCount);
-			
-			$('#away_Points').val(dataToProcess.sets[dataToProcess.sets.length-1].awayTeamTotalScore);
-			$('#away_FW').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[1].awayStatCount);
-			$('#away_FE').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[2].awayStatCount);
-			$('#away_BW').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[3].awayStatCount);
-			$('#away_BE').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[4].awayStatCount);
-			$('#away_golden').val(dataToProcess.sets[dataToProcess.sets.length-1].stats[5].awayStatCount);
-		}
+	case 'ADD_PLAYER_DATABASE':
 		
 		for(var i=1; i <= dataToProcess.match.homePlayers.length;i++){
 			if(i==1){
@@ -213,7 +156,7 @@ function initialiseForm(whatToProcess, dataToProcess)
 			}
 		}
 		
-		break;*/
+		break;
 	
 	case 'golden_points':
 		document.getElementById('select_golden_points_player').selectedIndex = 0 ;
@@ -312,9 +255,14 @@ function processUserSelection(whichInput)
 		break;
 	
 	case 'end_edit_set':
+		if(confirm('You want to save the value you edited in ' + $('#select_set_value option:selected').text()) == false) {
+			return false;
+		}
 
 		$('#select_set_value').prop('disabled',false);
 		uploadFormDataToSessionObjects('END_EDIT_SET');
+		$('#logging_stats_table_body').find("button, select, input").prop('disabled',true);
+		$('#logging_stats_div').find("input").prop('disabled',true);
 		break;
 		
 	case 'edit_set':
@@ -324,7 +272,7 @@ function processUserSelection(whichInput)
 			return false;
 		}
 		
-		if(confirm('You are about to edit ' + $('#select_set_count option:selected').text()) == false) {
+		if(confirm('You are about to edit ' + $('#select_set_value option:selected').text()) == false) {
 			return false;
 		}
 		
@@ -416,7 +364,8 @@ function processUserSelection(whichInput)
 	
 		if($(whichInput).attr('id').includes('_btn') && $(whichInput).attr('id').split('_').length >= 4) {
 			//alert(session_match.sets.length);
-    		if(session_match.sets[session_match.sets.length - 1].status == 'START'){
+    		if(session_match.sets[session_match.sets.length - 1].status == 'START' || 
+    				session_match.sets[$('#select_set_value option:selected').val() - 1].status == 'START'){
 	    		switch ($(whichInput).attr('id').split('_')[1]) {
 	    		case 'increment':
 					
@@ -524,7 +473,8 @@ function processUserSelection(whichInput)
 				}
 				uploadFormDataToSessionObjects('SAVE_STATS');
 				break;
-			}else if(session_match.sets[session_match.sets.length - 1].status == 'END'){
+			}else if(session_match.sets[session_match.sets.length - 1].status == 'END' || 
+    				session_match.sets[$('#select_set_value option:selected').val() - 1].status == 'END'){
 				alert('Next Set Not Started Yet');
 				break;
 			}
@@ -577,7 +527,10 @@ function uploadFormDataToSessionObjects(whatToProcess)
         	case 'START_SET':
         		initialiseForm(whatToProcess,response);
         		break;
-        	case 'END_SET': case 'RESET_SET':
+        	case 'EDIT_SET': case 'END_EDIT_SET':
+        		initialiseForm(whatToProcess,response);
+        		break;
+        	case 'END_SET': case 'RESET_SET': 
         		initialiseForm(whatToProcess,response);
         		break;
         	}
@@ -620,8 +573,8 @@ function processBadmintonProcedures(whatToProcess)
 				if(data){
 					if($('#database_file_timestamp').val() != data.database_file_timestamp) {
 						document.getElementById('database_file_timestamp').value = data.database_file_timestamp;
-						//initialiseForm('REPOPULATE_DATABASE_DATA',data)
-						initialiseFormData('REPOPULATE_DATABASE_DATA',data,data.sets[data.sets.length-1].setNumber);
+						initialiseForm('ADD_PLAYER_DATABASE',data)
+						//initialiseFormData('REPOPULATE_DATABASE_DATA',data,data.sets[data.sets.length-1].setNumber);
 					}
 				}
 				break;
@@ -657,12 +610,15 @@ function addItemsToList(whatToProcess, dataToProcess){
 
 		$('#selectedMatch').empty();
 		list_option = document.getElementById('selectedMatch');
+		var today = new Date();
+		var today_date = String(today.getDate()).padStart(2, '0') + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + today.getFullYear();
 		dataToProcess.forEach(function(match,index,array){
-			option = document.createElement('option');
-			option.value = match.matchId;
-				
-			option.innerHTML = match.matchId + '_' + match.groupname + '_' + match.matchnumber;
-			list_option.append(option);
+			if(match.matchDate == today_date){
+				option = document.createElement('option');
+				option.value = match.matchId;
+				option.innerHTML = match.matchId + '_'+ match.matchIdent + '_' + match.groupname + '_' + match.matchnumber;
+				list_option.append(option);
+			}
 		});
 		break;
 	
@@ -698,20 +654,6 @@ function addItemsToList(whatToProcess, dataToProcess){
 		option.innerHTML = 'Reset All';
 		option.id = 'reset_all';
 		option.style = 'width:130px;margin-left:5%;';
-		option.setAttribute('onclick','processUserSelection(this);');
-		div.appendChild(option);
-
-		option = document.createElement('button');
-		option.innerHTML = 'Edit Set';
-		option.id = 'edit_set';
-		option.style = 'width:130px;';
-		option.setAttribute('onclick','processUserSelection(this);');
-		div.appendChild(option);
-
-		option = document.createElement('button');
-		option.innerHTML = 'End Edit';
-		option.id = 'end_edit_set';
-		option.style = 'width:130px;';
 		option.setAttribute('onclick','processUserSelection(this);');
 		div.appendChild(option);
 
@@ -891,6 +833,8 @@ function addItemsToList(whatToProcess, dataToProcess){
 		text.style = 'width:500px;margin-top:1%;';
 		document.getElementById('logging_stats_div').appendChild(text).appendChild(option);
 		
+		div = document.createElement('div');
+		
 		option = document.createElement('select');
 		option.id = 'select_set_value';
 		
@@ -909,8 +853,25 @@ function addItemsToList(whatToProcess, dataToProcess){
 		text = document.createElement('label');
 		text.innerHTML = 'Previous Set: '
 		text.htmlFor = option.id;
-		text.style = 'width:500px;margin-top:1%;';
-		document.getElementById('logging_stats_div').appendChild(text).appendChild(option);
+		text.style = 'width:200px;margin-top:1%;';
+		div.appendChild(text).appendChild(option);
+		
+		
+		option = document.createElement('button');
+		option.innerHTML = 'Edit Set';
+		option.id = 'edit_set';
+		option.style = 'width:100px; ';
+		option.setAttribute('onclick','processUserSelection(this);');
+		div.appendChild(option);
+
+		option = document.createElement('button');
+		option.innerHTML = 'End Edit';
+		option.id = 'end_edit_set';
+		option.style = 'width:100px; margin-left:2%;';
+		option.setAttribute('onclick','processUserSelection(this);');
+		div.appendChild(option);
+		document.getElementById('logging_stats_div').appendChild(div);
+		
 		
 		table = document.createElement('table');
 		table.setAttribute('class', 'table table-bordered');
