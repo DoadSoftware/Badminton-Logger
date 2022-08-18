@@ -19,6 +19,9 @@ public class Player
 
   @Column(name = "TICKERNAME")
   private String ticker_name;
+  
+  @Column(name = "TICKERSMNAME")
+  private String ticker_sm_name;
 
   @Column(name = "TEAMID")
   private int teamId;
@@ -31,9 +34,6 @@ public class Player
   
   @Column(name = "TEXT2")
   private String text2;
-  
-  @Column(name = "CAPTAIN")
-  private String captain;
   
   @Column(name = "BAIRANKING")
   private Integer baiRanking;
@@ -74,6 +74,14 @@ public void setTicker_name(String ticker_name) {
 	this.ticker_name = ticker_name;
 }
 
+public String getTicker_sm_name() {
+	return ticker_sm_name;
+}
+
+public void setTicker_sm_name(String ticker_sm_name) {
+	this.ticker_sm_name = ticker_sm_name;
+}
+
 public int getTeamId() {
 	return teamId;
 }
@@ -104,14 +112,6 @@ public String getText2() {
 
 public void setText2(String text2) {
 	this.text2 = text2;
-}
-
-public String getCaptain() {
-	return captain;
-}
-
-public void setCaptain(String captain) {
-	this.captain = captain;
 }
 
 public Integer getBaiRanking() {

@@ -613,12 +613,22 @@ function addItemsToList(whatToProcess, dataToProcess){
 		var today = new Date();
 		var today_date = String(today.getDate()).padStart(2, '0') + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + today.getFullYear();
 		dataToProcess.forEach(function(match,index,array){
-			if(match.matchDate == today_date){
-				option = document.createElement('option');
-				option.value = match.matchId;
-				option.innerHTML = match.matchId + '_'+ match.matchIdent + '_' + match.groupname + '_' + match.matchnumber;
-				list_option.append(option);
+			if(match.matchId <= 9) {
+				if(match.matchDate == today_date){
+					option = document.createElement('option');
+					option.value = match.matchId;
+					option.innerHTML = '00' + match.matchId + '_'+ match.matchIdent + '_' + match.groupname + '_' + match.matchnumber;
+					list_option.append(option);
+				}
+			}else{
+				if(match.matchDate == today_date){
+					option = document.createElement('option');
+					option.value = match.matchId;
+					option.innerHTML = '0' + match.matchId + '_'+ match.matchIdent + '_' + match.groupname + '_' + match.matchnumber;
+					list_option.append(option);
+				}
 			}
+			
 		});
 		break;
 	

@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>BadmintonLogger</groupId>
   <artifactId>BadmintonLogger</artifactId>
-  <version>1.3.b13</version>
+  <version>1.3.b16</version>
   <packaging>war</packaging>
   <name>BadmintonLogger</name>
   <properties>
