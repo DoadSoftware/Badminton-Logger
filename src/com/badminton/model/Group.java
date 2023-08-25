@@ -19,10 +19,10 @@ import javax.persistence.Column;
 public class Group {
 
   @Id
-  @Column(name = "GROUPID")
+  @Column(name = "GroupId")
   private int groupId;
 
-  @Column(name = "GROUPNAME")
+  @Column(name = "GroupName")
   private String groupname;
 
 public Group() {

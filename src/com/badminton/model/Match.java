@@ -5,6 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+//import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,25 +15,25 @@ import javax.persistence.Column;
 public class Match {
 
   @Id
-  @Column(name = "matchId")
+  @Column(name = "MatchID")
   private Integer matchId;
   
-  @Column(name = "MATCHDATE")
+  @Column(name = "MatchDate")
   private String matchDate;
   
-  @Column(name = "MATCHIDENT")
+  @Column(name = "MatchIdent")
   private String matchIdent;
   
-  @Column(name = "MATCHNUMBER")
+  @Column(name = "MatchNumber")
   private Integer matchnumber;
   
-  @Column(name = "GROUPNAME")
+  @Column(name = "GroupName")
   private String groupname;
 	
-  @Column(name = "homeFirstPlayerId")
+  @Column(name = "HomeFirstPlayerId")
   private Integer homeFirstPlayerId ;
   
-  @Column(name = "homeSecondPlayerId")
+  @Column(name = "HomeSecondPlayerId")
   private Integer homeSecondPlayerId ;
 
   @Column(name = "homeThirdPlayerId")
@@ -50,7 +51,7 @@ public class Match {
   @Column(name = "numberOfSets")
   private Integer numberOfSets;
   
-  @Column(name = "numberOfPoints")
+  @Column(name = "NumberOfPoints")
   private Integer numberOfPoints;
   
   @Column(name = "categoryId")

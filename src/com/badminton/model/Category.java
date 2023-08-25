@@ -10,13 +10,13 @@ import javax.persistence.Column;
 public class Category
 {
   @Id
-  @Column(name = "CATEGORYID")
+  @Column(name = "CategoryID")
   private int categoryId;
 	
-  @Column(name = "CATEGORYFULLNAME")
+  @Column(name = "CategoryFullName")
   private String category_full_name;
 
-  @Column(name = "CATEGORYSHORTNAME")
+  @Column(name = "CategoryShortName")
   private String category_short_name;
 
 public int getCategoryId() {

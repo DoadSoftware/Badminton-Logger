@@ -24,10 +24,10 @@ public class Rules
 
   @Column(name = "TEXT1")
   private String text1;
-
-  public Rules() {
-	  super();
-  }
+  
+public Rules() {
+	super();
+}
 
 public Rules(int ruleId) {
 	super();
